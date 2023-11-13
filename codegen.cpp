@@ -1,100 +1,90 @@
-//TODO convert this file to real code
-
-
-
-
-
-
-void insert(string externalName,storeType inType, modes inMode, string inValue,
+void Compiler::insert(string externalName,storeType inType, modes inMode, string inValue,
  allocation inAlloc, int inUnits)
  //create symbol table entry for each identifier in list of external names
  //Multiply inserted names are illegal
 {
- string name
- while (name broken from list of external names and put into name != "")
+ string name;
+ while (externalName != "")
  {
- if (symbolTable[name] is defined)
- processError(multiple name definition)
- else if (name is a keyword)
- processError(illegal use of keyword)
+	 name.clear();
+	 while ((externalName != "") && (externalName.front() != ','))
+	 {
+		 name += externalName.front()
+		 externalName.erase(0,1);
+	 }
+	if ((externalName != "") && (externalName.front() == ','))
+		externalName.erase(0,1);
+	 
+	 
+ if (symbolTable.find(name) != symbolTable.end())
+	processError("multiple name definition");
+ else if (isKeyword(name))
+	processError("illegal use of keyword");
  else //create table entry
  {
- if (name begins with uppercase)
- symbolTable[name]=(name,inType,inMode,inValue,inAlloc,inUnits)
- else
- symbolTable[name]=(genInternalName(inType),inType,inMode,inValue,
- inAlloc,inUnits)
+	 if ((name.front() >= 'A') && (name.front() <= 'Z'))
+		 symbolTable[name]= SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits);
+	 else
+		 symbolTable[name]= SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits);
  }
 }
 
-storeTypes whichType(string name) //tells which data type a name has
+string Compiler::genInternalName(storeType inType) //Generates unique, legal internal names
 {
- if (name is a literal)
- if (name is a boolean literal)
- data type = BOOLEAN
- else
- data type = INTEGER
- else //name is an identifier and hopefully a constant
- if (symbolTable[name] is defined)
- data type = type of symbolTable[name]
- else
- processError(reference to undefined constant)
- return data type
-}
-string whichValue(string name) //tells which value a name has
-{
- if (name is a literal)
- value = name
- else //name is an identifier and hopefully a constant
- if (symbolTable[name] is defined and has a value)
- value = value of symbolTable[name]
- else
- processError(reference to undefined constant)
- return value
+	string newName;
+	static int boolCount = 0, intCount = 0;
+	if (inType == "Integer")
+	{
+		newName += 'I';
+		newName += char(intCount+'0');
+		++intCount;
+	}
+	else if (inType == "Boolean")
+	{
+		newName += 'B';
+		newName += char(boolCount+'0');
+		++boolCount;
+	}
+	else if (intType == "PROG_NAME")
+		newName = "PROG";					//temporary until I figure out what I'm supposed to name this
+	
+	return newName;
 }
 
-
-void code(string op, string operand1, string operand2)
+storeTypes Compiler::whichType(string name) //tells which data type a name has
 {
- if (op == "program")
- emitPrologue(operand1)
- else if (op == "end")
- emitEpilogue()
- else
- processError(compiler error since function code should not be called with
- illegal arguments)
+	storeTypes dataType;
+	
+	if (name is a literal)
+	{
+		if (name is a boolean literal)
+			dataType = "BOOLEAN";
+		else
+			dataType = "INTEGER";
+	}
+	
+	else //name is an identifier and hopefully a constant
+	{
+		if (symbolTable.find() != symbolTable.end())
+			dataType = symbolTable[name].getDataType();
+		else
+			processError("reference to undefined constant");
+	}
+	
+	return dataType;
 }
 
-
-void emit(string label, string instruction, string operands, string comment)
+string Compiler::whichValue(string name) //tells which value a name has
 {
- Turn on left justification in objectFile
- Output label in a field of width 8
- Output instruction in a field of width 8
- Output the operands in a field of width 24
- Output the comment
-}
-void emitPrologue(string progName, string operand2)
-{
- Output identifying comments at beginning of objectFile
- Output the %INCLUDE directives
- emit("SECTION", ".text")
- emit("global", "_start", "", "; program" + progName)
- emit("_start:")
-}
-void emitEpilogue(string operand1, string operand2)
-{
- emit("","Exit", "{0}");
- emitStorage();
-}
-void emitStorage()
-{
- emit("SECTION", ".data")
- for those entries in the symbolTable that have
- an allocation of YES and a storage mode of CONSTANT
- { call emit to output a line to objectFile }
- emit("SECTION", ".bss")
- for those entries in the symbolTable that have
- an allocation of YES and a storage mode of VARIABLE
-{ call emit to output a line to objectFile }
+	string value;
+	
+	if (name is a literal)
+		value = name;
+	else //name is an identifier and hopefully a constant
+	
+	if (symbolTable[name] is defined and has a value)
+		value = value of symbolTable[name]
+	else
+		processError(reference to undefined constant)
+	return value;
 }
