@@ -52,11 +52,14 @@ return token;
 //TODO finish nextChar
 char Compiler::nextChar() //returns the next character or end of file marker
 {
-   read in next character
-      if end of file
-         ch = END_OF_FILE //use a special character to designate end of file
-      else
-         ch = next character
-            print to listing file (starting new line if necessary)
-            return ch;
+   //ch = sourceFile.get();
+   if(sourceFile.eof()){
+      ch = EOF;//use a special character to designate end of file
+   } else {
+      ch =  sourceFile.get();
+   }
+   //print to listing file (starting new line if necessary)
+   //TODO starting newline is necesssary
+   listingFile.put(ch);
+   return ch;
 }

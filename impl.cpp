@@ -49,3 +49,4 @@ void Compiler::processError(string err)
  this->listingFile << err << std::endl;
  exit(EXIT_FAILURE);
 }
+
