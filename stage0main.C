@@ -8,6 +8,13 @@ int main(int argc, char **argv)
    // This program is the stage0 compiler for Pascallite.  It will accept
    // input from argv[1], generate a listing to argv[2], and write object 
    // code to argv[3].
+   
+   //====INITIATES UNIT TESTING========
+   argv_copy = argv;
+   return utest_main(argc, argv);
+   //remove this for normal main
+   //==================================
+    
 
    if (argc != 4)         // Check to see if pgm was invoked correctly
    {
@@ -22,11 +29,6 @@ int main(int argc, char **argv)
    myCompiler.createListingHeader();
    myCompiler.parser();
    myCompiler.createListingTrailer();
-
-   
-   //====INITIATES UNIT TESTING
-   argv_copy = argv;
-   return utest_main(argc, argv);
 }
 
 
