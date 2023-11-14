@@ -1,3 +1,5 @@
+#include "stage0.h"
+
 void Compiler::insert(string externalName,storeType inType, modes inMode, string inValue,
  allocation inAlloc, int inUnits)
  //create symbol table entry for each identifier in list of external names
