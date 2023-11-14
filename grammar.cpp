@@ -1,5 +1,4 @@
 #include "stage0.h"
-#include <iterator>
 
 void Compiler::prog() //token should be "program"
 {
