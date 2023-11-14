@@ -1,6 +1,8 @@
 #include "stage0.h"
 #include "utest.h"
 
+char** argv_copy;
+
 int main(int argc, char **argv)
 {
    // This program is the stage0 compiler for Pascallite.  It will accept
@@ -23,6 +25,7 @@ int main(int argc, char **argv)
 
    
    //====INITIATES UNIT TESTING
+   argv_copy = argv;
    return utest_main(argc, argv);
 }
 
@@ -32,8 +35,7 @@ UTEST_STATE();
 
 //========TESTING=========
 UTEST(helper, isKeyword) {
-   const char* dummy_argv[] = {"hello", "world", nullptr};
-   Compiler myCompiler(((char**)dummy_argv));
+   Compiler myCompiler(argv_copy);
    
    UTEST_TRUE( myCompiler.isKeyword("begin"), "begin is keyword", true);
    UTEST_TRUE( myCompiler.isKeyword("end"), "end is keyword", true);
