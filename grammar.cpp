@@ -5,8 +5,9 @@ void Compiler::prog() //token should be "program"
 {
    if (token != "program") {
       processError("keyword \"program\" expected");
-      progStmt();
    } 
+   
+   progStmt();
 
    if (token == "const") {
       consts();
