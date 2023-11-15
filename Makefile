@@ -4,3 +4,7 @@ BIN=main
 
 all:
 	g++ ${CFILES} ${CFLAGS} -o ${BIN}
+
+test:
+	g++ -DTEST ${CFILES} ${CFLAGS} -o ${BIN}
+	./main

@@ -10,8 +10,10 @@ int main(int argc, char **argv)
    // code to argv[3].
    
    //====INITIATES UNIT TESTING========
+#ifdef TEST
    argv_copy = argv;
    return utest_main(argc, argv);
+#endif
    //remove this for normal main
    //==================================
     
