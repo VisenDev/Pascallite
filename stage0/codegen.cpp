@@ -119,7 +119,7 @@ void Compiler::code(string op, string operand1, string operand2) {
 
 void Compiler::emit(string label, string instruction, string operands, string comment) {	
 	objectFile << left;
-	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands << comment << endl;
+	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands << "; " << comment << endl;
 }
 
 void Compiler::emitPrologue(string progName, string operand2) {
@@ -132,6 +132,7 @@ void Compiler::emitPrologue(string progName, string operand2) {
 	
 	emit("SECTION", ".text");
 	emit("global", "_start", "", "; program " + progName);
+	objectFile << endl;
 	emit("_start:");
 }
 

@@ -1,4 +1,4 @@
-CFLAGS= -Wall -Wextra -Wpedantic -std=c++11 -ferror-limit=2
+CFLAGS= -Wall -Wextra -Wpedantic -std=c++11
 CFILES= *.C *.cpp
 BIN=main
 
