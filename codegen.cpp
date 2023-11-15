@@ -64,6 +64,7 @@ storeTypes Compiler::whichType(string name) //tells which data type a name has
 {
    storeTypes dataType = INTEGER;
 
+   //TODO I think this logic here is wrong, or the definition of isLiteral is wrong
    if (isLiteral(name))
    {
       if (isBoolean(name)) {
@@ -79,7 +80,7 @@ storeTypes Compiler::whichType(string name) //tells which data type a name has
       if (symbolTable.find(name) != symbolTable.end()) {
          dataType = symbolTable.find(name)->second.getDataType();
       } else {
-         processError("reference to undefined constant");
+         processError("reference to undefined constant \"" + name + "\"");
       }
    }
 
@@ -96,7 +97,7 @@ string Compiler::whichValue(string name) //tells which value a name has
       if (symbolTable.find(name) != symbolTable.end()) {
          value = symbolTable.find(name)->second.getValue();
       } else {
-         processError("reference to undefined constant");
+         processError("reference to undefined constant \"" + name + "\"");
       }
    }
    return value;

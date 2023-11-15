@@ -98,6 +98,7 @@ UTEST(helperFunctions, isNonKeyId) {
     UTEST_TRUE(myCompiler.isNonKeyId("hello_world"), "\"hello_world\" is a valid indentifier", false);
     UTEST_TRUE(myCompiler.isNonKeyId("abc_123"), "\"abc_123\" is a valid indentifier", false);
     
+    UTEST_FALSE(myCompiler.isNonKeyId("var"), "\"var\" is not a valid indentifier", false);
     UTEST_FALSE(myCompiler.isNonKeyId("hello_world_"), "trailing underscore is invalid", false);
     UTEST_FALSE(myCompiler.isNonKeyId("HELLO_WORLD"), "undercase only", false);
     UTEST_FALSE(myCompiler.isNonKeyId("9abc"), "cannot start with number", false);

@@ -16,6 +16,7 @@ bool Compiler::isSpecialSymbol(char c) const {
 bool Compiler::isNonKeyId(string s) const {
    const auto result =  
       std::islower(s[0]) 
+      && !isKeyword(s)
       && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !isdigit(c) and !islower(c) and c != '_'; }) == s.end()
       && s[s.length() - 1] != '_';
    return result;

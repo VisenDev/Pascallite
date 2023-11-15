@@ -91,7 +91,7 @@ void Compiler::constStmts() //token should be NON_KEY_ID
    }
    x = token;
    if (nextToken() != "=") {
-      processError("\"=\" expected");
+      processError("\"=\" expected found " + token);
    }
    y = nextToken();
 
@@ -123,7 +123,6 @@ void Compiler::constStmts() //token should be NON_KEY_ID
    if (nextToken() != ";") {
       processError("semicolon expected");
    }
-
 
    if (whichType(y) != INTEGER and whichType(y) != BOOLEAN) {
       processError("data type of token on the right-hand side must be INTEGER or BOOLEAN");
