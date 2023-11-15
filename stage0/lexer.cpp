@@ -53,15 +53,23 @@ return token;
 
 char Compiler::nextChar() //returns the next character or end of file marker
 {
-   if(sourceFile.eof()){
+   ch = sourceFile.get();
+      
+   if(sourceFile.eof() or ch == EOF){
       ch = END_OF_FILE;//use a special character to designate end of file
-   } else {
-      ch = sourceFile.get();
    }
+   
    //print to listing file (starting new line if necessary)
-   //TODO starting newline is necesssary
    if(ch != EOF && ch != END_OF_FILE) {
+      static int line_number = 1;
       listingFile.put(ch);
+      if(ch == '\n') {
+         //TODO use iomanip here for proper formatting
+         //Don't add line number for last line
+         listingFile << "    " << line_number << "|";
+         ++line_number;
+      }
    }
+   
    return ch;
 }
