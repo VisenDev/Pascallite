@@ -30,7 +30,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
          } else {
             symbolTable.find(name)->second = SymbolTableEntry{genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits};
             //symbolTable[name]= SymbolTableEntry(genInternalName(inType),inType,inMode,inValue,inAlloc,inUnits);
-         }
+         }  //Matt:  Not sure if this is gonna work, I don't think name has been inserted to the symbolTable yet and symbolTable.find(name) will always return null ptr
       }
    }
 }
@@ -98,4 +98,59 @@ string Compiler::whichValue(string name) //tells which value a name has
       }
    }
    return value;
+}
+
+void code(string op, string operand1, string operand2)
+{
+	if (op == "program")
+		emitPrologue(operand1);
+	else if (op == "end")
+		emitEpilogue();
+	else
+		processError("compiler error since function code should not be called with illegal arguments")
+}
+
+void emit(string label, string instruction="", string operands="", string comment="")
+{	
+	objectFile << left;
+	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands << comment << endl;
+}
+
+void emitPrologue(string progName, string operand2="")
+{
+	time_t now = time (NULL);
+	objectFile << "; Robert Burnett, Mattias Bartonette" << ctime(&now)  << endl;
+	
+	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
+	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
+	
+	emit("SECTION", ".text");
+	emit("global", "_start", "", "; program " + progName);
+	emit("_start:");
+}
+
+void emitEpilogue(string operand1, string operand2)
+{
+	emit("","Exit", "{0}");
+	emitStorage();
+}
+
+void emitStorage()
+{
+	emit("SECTION", ".data");
+	
+	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
+		if ((itr->second.getAlloc() = ="YES") && (itr->second.getStorageMode() == "CONSTANT"))
+		{
+			emit(itr->second.getInternalName(), "dd", itr->second.getValue(), "; "+itr->first);
+		}
+	
+	emit("SECTION", ".bss");
+	
+	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
+		if ((itr->second.getAlloc() = ="YES") && (itr->second.getStorageMode() == "VARIABLE"))
+		{
+			emit(itr->second.getInternalName(), "resd", itr->second.getValue(), "; "+itr->first);
+		}
+	
 }
