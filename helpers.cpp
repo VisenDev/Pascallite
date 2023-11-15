@@ -14,10 +14,11 @@ bool Compiler::isSpecialSymbol(char c) const {
 }
 
 bool Compiler::isNonKeyId(string s) const {
-   return std::isalpha(s[0]) 
-      && std::find_if(s.begin(), s.end(), [](unsigned char c) { return std::isdigit(c) || std::isalpha(c); }) == s.end()
-      && s[s.length()] != '_';
-
+   const auto result =  
+      std::islower(s[0]) 
+      && std::find_if(s.begin(), s.end(), [](unsigned char c) { return std::isdigit(c) || std::isalpha(c) || c == '_'; }) == s.end()
+      && s[s.length() - 1] != '_';
+   return result;
 }
 
 bool Compiler::isInteger(string s) const {
