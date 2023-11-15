@@ -139,8 +139,8 @@ void Compiler::emitPrologue(string progName, string operand2) {
 void Compiler::emitEpilogue(string operand1, string operand2) {
    (void) operand1; //suppress warning
    (void) operand2; //suppress warning
-	emit("","Exit", "{0}");
 	emitStorage();
+	emit("","Exit", "{0}");
 }
 
 void Compiler::emitStorage()
