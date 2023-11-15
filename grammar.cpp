@@ -18,9 +18,9 @@ void Compiler::prog() //token should be "program"
 
    if (token != "begin") {
       processError("keyword \"begin\" expected");
-      beginEndStmt();
-
    }
+   
+   beginEndStmt();
 
    if (ch != END_OF_FILE)  {
       processError("no text may follow \"end\"");
@@ -79,6 +79,7 @@ void Compiler::beginEndStmt() //token should be "begin"
       processError("period expected");
    }
    nextToken();
+//   cout << "the last token is \"" << token << "\"\n";
    code("end", ".");
 }
 

@@ -28,15 +28,15 @@ void Compiler::parser()
    this->ch = this->nextChar();
    //ch must be initialized to the first character of the source file
    if (this->nextToken() != "program") {
-      processError("keyword \"program\" expected");
+      processError("keyword \"program\" expected, found " + token);
       //a call to nextToken() has two effects
       // (1) the variable, token, is assigned the value of the next token
       // (2) the next token is read from the source file in order to make
       // the assignment. The value returned by nextToken() is also
       // the next token.
-      this->prog();
       //parser implements the grammar rules, calling first rule
    }
+   this->prog();
 }
 
 void Compiler::createListingTrailer()
