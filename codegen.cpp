@@ -102,24 +102,24 @@ string Compiler::whichValue(string name) //tells which value a name has
    return value;
 }
 
-void code(string op, string operand1, string operand2)
-{
-	if (op == "program")
+void Compiler::code(string op, string operand1, string operand2) {
+   (void) operand2; //suppress warning
+	if (op == "program") {
 		emitPrologue(operand1);
-	else if (op == "end")
+   } else if (op == "end") {
 		emitEpilogue();
-	else
-		processError("compiler error since function code should not be called with illegal arguments")
+   } else {
+		processError("compiler error since function code should not be called with illegal arguments");
+   }
 }
 
-void emit(string label, string instruction="", string operands="", string comment="")
-{	
+void Compiler::emit(string label, string instruction, string operands, string comment) {	
 	objectFile << left;
 	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands << comment << endl;
 }
 
-void emitPrologue(string progName, string operand2="")
-{
+void Compiler::emitPrologue(string progName, string operand2) {
+   (void) operand2; //suppress warning
 	time_t now = time (NULL);
 	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now)  << endl;
 	
@@ -131,18 +131,19 @@ void emitPrologue(string progName, string operand2="")
 	emit("_start:");
 }
 
-void emitEpilogue(string operand1, string operand2)
-{
+void Compiler::emitEpilogue(string operand1, string operand2) {
+   (void) operand1; //suppress warning
+   (void) operand2; //suppress warning
 	emit("","Exit", "{0}");
 	emitStorage();
 }
 
-void emitStorage()
+void Compiler::emitStorage()
 {
 	emit("SECTION", ".data");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
-		if ((itr->second.getAlloc() = ="YES") && (itr->second.getStorageMode() == "CONSTANT"))
+		if ((itr->second.getAlloc() == YES) && (itr->second.getMode() == CONSTANT))
 		{
 			emit(itr->second.getInternalName(), "dd", itr->second.getValue(), "; "+itr->first);
 		}
@@ -150,7 +151,7 @@ void emitStorage()
 	emit("SECTION", ".bss");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
-		if ((itr->second.getAlloc() = ="YES") && (itr->second.getStorageMode() == "VARIABLE"))
+		if ((itr->second.getAlloc() == YES) && (itr->second.getMode() == VARIABLE))
 		{
 			emit(itr->second.getInternalName(), "resd", itr->second.getValue(), "; "+itr->first);
 		}
