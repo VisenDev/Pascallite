@@ -36,17 +36,29 @@ int main(int argc, char **argv)
 UTEST_STATE();
 
 //========TESTING=========
-UTEST(helper, isKeyword) {
+UTEST(helper_functions, isKeyword) {
    Compiler myCompiler(argv_copy);
    
-   UTEST_TRUE( myCompiler.isKeyword("begin"), "begin is keyword", true);
-   UTEST_TRUE( myCompiler.isKeyword("end"), "end is keyword", true);
-   UTEST_TRUE( myCompiler.isKeyword("const"), "const is keyword", true);
-   UTEST_TRUE( myCompiler.isKeyword("var"), "const is keyword", true);
+   UTEST_TRUE( myCompiler.isKeyword("begin"), "begin is valid keyword", false);
+   UTEST_TRUE( myCompiler.isKeyword("end"), "end is valid keyword", false);
+   UTEST_TRUE( myCompiler.isKeyword("const"), "const is a valid keyword", false);
+   UTEST_TRUE( myCompiler.isKeyword("var"), "var is a valid keyword", false);
    
-   UTEST_FALSE( myCompiler.isKeyword("consts"), "fake keyword", true);
-   UTEST_FALSE( myCompiler.isKeyword("vars"), "fake keyword", true);
-   UTEST_FALSE( myCompiler.isKeyword("foo"), "fake keyword", true);
-   UTEST_FALSE( myCompiler.isKeyword("foobar"), "fake keyword", true);
+   UTEST_FALSE( myCompiler.isKeyword("consts"), "fake keyword", false);
+   UTEST_FALSE( myCompiler.isKeyword("vars"), "fake keyword", false);
+   UTEST_FALSE( myCompiler.isKeyword("foo"), "fake keyword", false);
+   UTEST_FALSE( myCompiler.isKeyword("foobar"), "fake keyword", false);
 }
 
+UTEST(helper_functions, isBoolean) {
+    Compiler myCompiler(argv_copy);
+   
+    UTEST_TRUE(myCompiler.isBoolean("true"), "\"true\" is a boolean", false);
+    UTEST_TRUE(myCompiler.isBoolean("false"), "\"false\" is a boolean", false);
+
+    UTEST_FALSE(myCompiler.isBoolean("1"), "\"1\" is not a boolean", false);
+    UTEST_FALSE(myCompiler.isBoolean("0"), "\"0\" is not a boolean", false);
+    UTEST_FALSE(myCompiler.isBoolean("hello"), "\"hello\" is not a boolean", false);
+    UTEST_FALSE(myCompiler.isBoolean("TRUE"), "\"TRUE\" is not a boolean", false);
+    UTEST_FALSE(myCompiler.isBoolean("FALSE"), "\"FALSE\" is not a boolean", false);
+}

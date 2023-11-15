@@ -4,7 +4,7 @@
 // Helper functions for the Pascallite lexicon
  
 bool Compiler::isKeyword(string s) const {
-   auto keywords = {"begin", "end", "vars", "consts", "program", "true", "false", "not", "integer", "boolean"};
+   auto keywords = {"begin", "end", "var", "const", "program", "true", "false", "not", "integer", "boolean"};
    return std::find(keywords.begin(), keywords.end(), s) != keywords.end();
 }
 
