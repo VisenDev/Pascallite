@@ -119,7 +119,7 @@ void emit(string label, string instruction="", string operands="", string commen
 void emitPrologue(string progName, string operand2="")
 {
 	time_t now = time (NULL);
-	objectFile << "; Robert Burnett, Mattias Bartonette" << ctime(&now)  << endl;
+	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now)  << endl;
 	
 	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
 	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;

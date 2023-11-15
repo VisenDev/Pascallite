@@ -17,8 +17,9 @@ Compiler::~Compiler() // destructor
 
 void Compiler::createListingHeader()
 {
-   //TODO add date and time of day
-   this->listingFile << "STAGE0: Robert Burnett, Mattias Bartonette" << std::endl;
+	time_t now = time (NULL);
+	
+   this->listingFile << left << setw(42) << "STAGE0: Robert Burnett, Matthew Barton" << ctime(&now)  << std::endl;
    this->listingFile << "LINE NO: " << "SOURCE STATEMENT" << std::endl;
 }
 
