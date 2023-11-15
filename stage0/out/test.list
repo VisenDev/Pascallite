@@ -1,0 +1,13 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 16:06:10 2023
+
+LINE NO: SOURCE STATEMENT
+program test;
+const a = 1;
+      b = 10;
+      c = false;
+      d = not c;
+var
+    foo: integer;
+begin
+end.
+COMPILATION TERMINATED# ERRORS ENCOUNTERED

@@ -23,7 +23,7 @@ void Compiler::prog() //token should be "program"
    beginEndStmt();
 
    if (ch != END_OF_FILE)  {
-      processError("no text may follow \"end\"");
+      processError("no text may follow \"end\", found \"" + string{ch} + "\"");
    }
 }
 
@@ -79,7 +79,6 @@ void Compiler::beginEndStmt() //token should be "begin"
       processError("period expected");
    }
    nextToken();
-//   cout << "the last token is \"" << token << "\"\n";
    code("end", ".");
 }
 
@@ -158,7 +157,13 @@ void Compiler::varStmts() //token should be NON_KEY_ID
    if (nextToken() != ";") {
       processError("semicolon expected");
    }
-   insert(x,whichType(y),VARIABLE,"",YES,1);
+   //NOTE: I removed whichtype(y), that may have been incorrect
+   
+   const auto type = y == "integer"
+      ? INTEGER 
+      : y == "boolean"
+      ? BOOLEAN : PROG_NAME;
+   insert(x, type,VARIABLE,"",YES,1);
 
    temp = nextToken();
    if (temp != "begin" and !isNonKeyId(temp)) {

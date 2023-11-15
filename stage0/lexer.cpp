@@ -41,6 +41,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
             processError("unexpected end of file");
          }
       } else if(ch == END_OF_FILE || ch == EOF) {
+         ch = END_OF_FILE;
          token = END_OF_FILE;
       } else{
          processError("illegal symbol, symbol \"" + string{ch} + "\" is not allowed");
@@ -59,6 +60,8 @@ char Compiler::nextChar() //returns the next character or end of file marker
    }
    //print to listing file (starting new line if necessary)
    //TODO starting newline is necesssary
-   listingFile.put(ch);
+   if(ch != EOF && ch != END_OF_FILE) {
+      listingFile.put(ch);
+   }
    return ch;
 }

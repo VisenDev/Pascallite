@@ -1,4 +1,5 @@
 #include "stage0.h"
+#include <iterator>
 
 void Compiler::insert(string externalName, storeTypes inType, modes inMode, string inValue,
       allocation inAlloc, int inUnits)
@@ -69,9 +70,11 @@ storeTypes Compiler::whichType(string name) //tells which data type a name has
    {
       if (isBoolean(name)) {
          dataType = BOOLEAN;
+         return dataType;
       }
       else {
          dataType = INTEGER;
+         return dataType;
       }
    }
 
