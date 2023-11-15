@@ -61,13 +61,12 @@ char Compiler::nextChar() //returns the next character or end of file marker
    
    //print to listing file (starting new line if necessary)
    if(ch != EOF && ch != END_OF_FILE) {
-      static int line_number = 1;
       listingFile.put(ch);
       if(ch == '\n') {
          //TODO use iomanip here for proper formatting
          //Don't add line number for last line
-         listingFile << "    " << line_number << "|";
-         ++line_number;
+		 ++lineNo;
+         listingFile << "    " << lineNo << "|";
       }
    }
    

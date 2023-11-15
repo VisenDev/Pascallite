@@ -9,6 +9,7 @@
 #include "utest.h"
 #include <iomanip>
 #include <ctime>
+#include <algorithm>
 
 using namespace std;
 
