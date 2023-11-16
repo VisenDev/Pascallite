@@ -132,7 +132,7 @@ void Compiler::emitPrologue(string progName, string operand2) {
 	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now);
 	
 	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
-	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
+	objectFile << "%INCLUDE \"Macros_Along.inc\"" << setw(0) << endl << endl;
 	
 	emit("SECTION", ".text");
 	emit("global", "_start", "", "; program " + progName);
