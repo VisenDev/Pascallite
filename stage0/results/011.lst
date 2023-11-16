@@ -1,0 +1,8 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|program stage0no011;
+   2|   {no real numbers in our Pascallite}
+   3|
+   4|   const car = 2;
+   5|         wrong = 3.5semicolon expected

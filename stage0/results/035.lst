@@ -1,0 +1,8 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|{ comments are OK before the program statement }
+   2|program stage0no035;
+   3|    begin
+   4|    end.    {comments are OK after end.}
+   5|COMPILATION TERMINATED# ERRORS ENCOUNTERED
