@@ -1,0 +1,12 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:53 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no032; {this is 001.dat with much whitespace eliminated}
+    2|const yes=true;no=false;small=0;smalleryet=-1;big=1;biggeryet=2;
+    3|      large=biggeryet;maybe=not true;
+    4|var   some,many:integer;right,wrong:boolean;
+    5|begin
+    6|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

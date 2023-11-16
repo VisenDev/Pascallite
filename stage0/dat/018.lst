@@ -1,0 +1,39 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:52 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no018;
+    2|         {test a lot of long non_key_ids, should be okay}
+    3|  const  zero = 0;  five{5} = 5;
+    4|  var
+    5|aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:  integer;
+    6|bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb:  integer;
+    7|ccccccccccccccccccccccccccccccc:  integer;
+    8|ddddddddddddddddddddddddddddddd:  integer;
+    9|eeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:  integer;
+   10|fffffffffffffffffffffffffffffff:  integer;
+   11|ggggggggggggggggggggggggggggggg:  integer;
+   12|hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh:  integer;
+   13|iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii:  integer;
+   14|jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj:  integer;
+   15|kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk:  integer;
+   16|lllllllllllllllllllllllllllllll:  integer;
+   17|mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm:  integer;
+   18|nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn:  integer;
+   19|ooooooooooooooooooooooooooooooo:  integer;
+   20|ppppppppppppppppppppppppppppppp:  integer;
+   21|qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq:  integer;
+   22|rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:  integer;
+   23|sssssssssssssssssssssssssssssss:  integer;
+   24|ttttttttttttttttttttttttttttttt:  integer;
+   25|uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu:  integer;
+   26|vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv:  integer;
+   27|wwwwwwwwwwwwwwwwwwwwwwwwwwwwwww:  integer;
+   28|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:  integer;
+   29|yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy:  integer;
+   30|zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz: integer;       d: 
+   31| boolean;
+   32|  begin
+   33|end  .
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

@@ -1,0 +1,291 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:53 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no028;
+    2|         {fill the symbol table with 256 entries; should be ok}
+    3|  var
+    4|var000 : integer;
+    5|var001 : integer;
+    6|var002 : integer;
+    7|var003 : integer;
+    8|var004 : integer;
+    9|var005 : integer;
+   10|var006 : integer;
+   11|var007 : integer;
+   12|var008 : integer;
+   13|var009 : integer;
+   14|
+   15|var010 : integer;
+   16|var011 : integer;
+   17|var012 : integer;
+   18|var013 : integer;
+   19|var014 : integer;
+   20|var015 : integer;
+   21|var016 : integer;
+   22|var017 : integer;
+   23|var018 : integer;
+   24|var019 : integer;
+   25|
+   26|var020 : integer;
+   27|var021 : integer;
+   28|var022 : integer;
+   29|var023 : integer;
+   30|var024 : integer;
+   31|var025 : integer;
+   32|var026 : integer;
+   33|var027 : integer;
+   34|var028 : integer;
+   35|var029 : integer;
+   36|
+   37|var030 : integer;
+   38|var031 : integer;
+   39|var032 : integer;
+   40|var033 : integer;
+   41|var034 : integer;
+   42|var035 : integer;
+   43|var036 : integer;
+   44|var037 : integer;
+   45|var038 : integer;
+   46|var039 : integer;
+   47|
+   48|var040 : integer;
+   49|var041 : integer;
+   50|var042 : integer;
+   51|var043 : integer;
+   52|var044 : integer;
+   53|var045 : integer;
+   54|var046 : integer;
+   55|var047 : integer;
+   56|var048 : integer;
+   57|var049 : integer;
+   58|
+   59|var050 : integer;
+   60|var051 : integer;
+   61|var052 : integer;
+   62|var053 : integer;
+   63|var054 : integer;
+   64|var055 : integer;
+   65|var056 : integer;
+   66|var057 : integer;
+   67|var058 : integer;
+   68|var059 : integer;
+   69|
+   70|var060 : integer;
+   71|var061 : integer;
+   72|var062 : integer;
+   73|var063 : integer;
+   74|var064 : integer;
+   75|var065 : integer;
+   76|var066 : integer;
+   77|var067 : integer;
+   78|var068 : integer;
+   79|var069 : integer;
+   80|
+   81|var070 : integer;
+   82|var071 : integer;
+   83|var072 : integer;
+   84|var073 : integer;
+   85|var074 : integer;
+   86|var075 : integer;
+   87|var076 : integer;
+   88|var077 : integer;
+   89|var078 : integer;
+   90|var079 : integer;
+   91|
+   92|var080 : integer;
+   93|var081 : integer;
+   94|var082 : integer;
+   95|var083 : integer;
+   96|var084 : integer;
+   97|var085 : integer;
+   98|var086 : integer;
+   99|var087 : integer;
+  100|var088 : integer;
+  101|var089 : integer;
+  102|
+  103|var090 : integer;
+  104|var091 : integer;
+  105|var092 : integer;
+  106|var093 : integer;
+  107|var094 : integer;
+  108|var095 : integer;
+  109|var096 : integer;
+  110|var097 : integer;
+  111|var098 : integer;
+  112|var099 : integer;
+  113|
+  114|var100 : integer;
+  115|var101 : integer;
+  116|var102 : integer;
+  117|var103 : integer;
+  118|var104 : integer;
+  119|var105 : integer;
+  120|var106 : integer;
+  121|var107 : integer;
+  122|var108 : integer;
+  123|var109 : integer;
+  124|
+  125|var110 : integer;
+  126|var111 : integer;
+  127|var112 : integer;
+  128|var113 : integer;
+  129|var114 : integer;
+  130|var115 : integer;
+  131|var116 : integer;
+  132|var117 : integer;
+  133|var118 : integer;
+  134|var119 : integer;
+  135|
+  136|var120 : integer;
+  137|var121 : integer;
+  138|var122 : integer;
+  139|var123 : integer;
+  140|var124 : integer;
+  141|var125 : integer;
+  142|var126 : integer;
+  143|var127 : integer;
+  144|var128 : integer;
+  145|var129 : integer;
+  146|
+  147|var130 : integer;
+  148|var131 : integer;
+  149|var132 : integer;
+  150|var133 : integer;
+  151|var134 : integer;
+  152|var135 : integer;
+  153|var136 : integer;
+  154|var137 : integer;
+  155|var138 : integer;
+  156|var139 : integer;
+  157|
+  158|var140 : integer;
+  159|var141 : integer;
+  160|var142 : integer;
+  161|var143 : integer;
+  162|var144 : integer;
+  163|var145 : integer;
+  164|var146 : integer;
+  165|var147 : integer;
+  166|var148 : integer;
+  167|var149 : integer;
+  168|
+  169|var150 : integer;
+  170|var151 : integer;
+  171|var152 : integer;
+  172|var153 : integer;
+  173|var154 : integer;
+  174|var155 : integer;
+  175|var156 : integer;
+  176|var157 : integer;
+  177|var158 : integer;
+  178|var159 : integer;
+  179|
+  180|var160 : integer;
+  181|var161 : integer;
+  182|var162 : integer;
+  183|var163 : integer;
+  184|var164 : integer;
+  185|var165 : integer;
+  186|var166 : integer;
+  187|var167 : integer;
+  188|var168 : integer;
+  189|var169 : integer;
+  190|
+  191|var170 : integer;
+  192|var171 : integer;
+  193|var172 : integer;
+  194|var173 : integer;
+  195|var174 : integer;
+  196|var175 : integer;
+  197|var176 : integer;
+  198|var177 : integer;
+  199|var178 : integer;
+  200|var179 : integer;
+  201|
+  202|var180 : integer;
+  203|var181 : integer;
+  204|var182 : integer;
+  205|var183 : integer;
+  206|var184 : integer;
+  207|var185 : integer;
+  208|var186 : integer;
+  209|var187 : integer;
+  210|var188 : integer;
+  211|var189 : integer;
+  212|
+  213|var190 : integer;
+  214|var191 : integer;
+  215|var192 : integer;
+  216|var193 : integer;
+  217|var194 : integer;
+  218|var195 : integer;
+  219|var196 : integer;
+  220|var197 : integer;
+  221|var198 : integer;
+  222|var199 : integer;
+  223|
+  224|var200 : integer;
+  225|var201 : integer;
+  226|var202 : integer;
+  227|var203 : integer;
+  228|var204 : integer;
+  229|var205 : integer;
+  230|var206 : integer;
+  231|var207 : integer;
+  232|var208 : integer;
+  233|var209 : integer;
+  234|
+  235|var210 : integer;
+  236|var211 : integer;
+  237|var212 : integer;
+  238|var213 : integer;
+  239|var214 : integer;
+  240|var215 : integer;
+  241|var216 : integer;
+  242|var217 : integer;
+  243|var218 : integer;
+  244|var219 : integer;
+  245|
+  246|var220 : integer;
+  247|var221 : integer;
+  248|var222 : integer;
+  249|var223 : integer;
+  250|var224 : integer;
+  251|var225 : integer;
+  252|var226 : integer;
+  253|var227 : integer;
+  254|var228 : integer;
+  255|var229 : integer;
+  256|
+  257|var230 : integer;
+  258|var231 : integer;
+  259|var232 : integer;
+  260|var233 : integer;
+  261|var234 : integer;
+  262|var235 : integer;
+  263|var236 : integer;
+  264|var237 : integer;
+  265|var238 : integer;
+  266|var239 : integer;
+  267|
+  268|var240 : integer;
+  269|var241 : integer;
+  270|var242 : integer;
+  271|var243 : integer;
+  272|var244 : integer;
+  273|var245 : integer;
+  274|var246 : integer;
+  275|var247 : integer;
+  276|var248 : integer;
+  277|var249 : integer;
+  278|
+  279|var250 : integer;
+  280|var251 : integer;
+  281|var252 : integer;
+  282|var253 : integer;
+  283|var254 : integer;
+  284|  begin
+  285|end  .
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

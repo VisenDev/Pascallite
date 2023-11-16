@@ -1,0 +1,15 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:52 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program    stage0no001;   {here is a comment}
+    2|     const yes=true;no=false;
+    3|           small=0;smalleryet=-1;
+    4|           big = 1;  biggeryet = 2;  large = biggeryet;
+    5|		   maybe = not true;
+    6|     var   some,many:integer;
+    7|           right, wrong : boolean;
+    8|     begin
+    9|     end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED
