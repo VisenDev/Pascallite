@@ -4,7 +4,7 @@
 #2023 - Robert Burnett
 
 #get full path to the compiler
-COMPILER="$(realpath ${1})"
+COMPILER="$(realpath "${1}")"
 DATAPATH="./dat/"
 
 #ANSI COLOR CODES
@@ -23,33 +23,41 @@ if [[ ! -e $COMPILER ]]; then
    exit
 fi
 
-if [[ ! -eq results ]]; then
+if [[ ! -e results ]]; then
    mkdir results
 fi
 
+function output {
+   if [[ $1 == 0 ]]; then 
+         echo -e "${GREEN}[$SET SUCCESS]${NC} $2"
+   else
+      echo -e "${RED}[$SET    FAIL]${NC} $2"
+   fi
+}
+
 #collect the id number of all datasets
-for file in ${DATAPATH}*.dat
+for file in "${DATAPATH}"*.dat
 do
    SET=${file:${#DATAPATH}:3}
 
       #   #if the dataset has an assembly file, the compiler should generate an assembly file that passes the diff
-      if test -f ${DATAPATH}${SET}.asm; then
-         $COMPILER ${DATAPATH}${SET}.dat results/${SET}.lst results/${SET}.asm
+      if test -f "${DATAPATH}${SET}.asm"; then
 
-         NUM_DIFFERENT_LINES=$(diff ${DATAPATH}${SET}.asm results/${SET}.asm | grep -o -e "---" | wc -l) 
+         "$COMPILER" "${DATAPATH}${SET}.dat" "results/${SET}.lst" "results/${SET}.asm"
+         NUM_DIFFERENT_LINES=$(diff "${DATAPATH}${SET}.asm" "results/${SET}.asm" | grep -o -e "---" | wc -l) 
          if [[ $NUM_DIFFERENT_LINES -le 1 ]]; then 
-            echo -e "${GREEN}[$SET SUCCESS]${NC} generated assembly passed the diff"
+            output 0 "generated assembly passed the diff"
          else
-            echo -e "${RED}[$SET    FAIL]${NC} generated assembly did not pass the diff"
+            output 1 "generated assembly did not pass the diff"
          fi
 
-         #if the dataset has no assembly file, we should make sure that the compiler exits with a failure code indicating it caught the error
+      #if the dataset has no assembly file, we should make sure that the compiler exits with a failure code indicating it caught the error
       else
-         $COMPILER ${DATAPATH}${SET}.dat results/${SET}.lst results/${SET}.asm
+         "$COMPILER" "${DATAPATH}${SET}.dat" "results/${SET}.lst" "results/${SET}.asm"
          if [[ $? -eq 0 ]]; then 
-            echo -e "${RED}[$SET    FAIL]${NC} compiler erroneously compiled a failing test case"
+            output 1 "compiler did not catch error in source file"
          else
-            echo -e "${GREEN}[$SET SUCCESS]${NC} compiler did not compile failing test case"
+            output 0 "compiler caught error in source file"
          fi
       fi
    done
