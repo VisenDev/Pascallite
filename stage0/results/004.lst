@@ -1,8 +1,0 @@
-STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
-
-LINE NO.              SOURCE STATEMENT
-   1|program stage0no004;
-   2|      {x may not be redefined}
-   3|
-   4|   var x: integer; {x may not be redefined}
-   5|       x: integer; multiple name definition
