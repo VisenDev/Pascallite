@@ -5,7 +5,7 @@
 
 #get full path to the compiler
 COMPILER="$(realpath ${1})"
-DATAPATH="/usr/local/4301/data/stage0/"
+DATAPATH="./stage0/dat/"
 
 #ANSI COLOR CODES
 RED='\033[0;31m'

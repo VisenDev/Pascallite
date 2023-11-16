@@ -50,6 +50,7 @@ void Compiler::processError(string err)
 {
  //Output err to listingFile
  this->listingFile << err << std::endl;
+ objectFile.flush();
  exit(EXIT_FAILURE);
 }
 
