@@ -129,10 +129,10 @@ void Compiler::emit(string label, string instruction, string operands, string co
 void Compiler::emitPrologue(string progName, string operand2) {
    (void) operand2; //suppress warning
 	time_t now = time (NULL);
-	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now);
+	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << setw(0) << ctime(&now);
 	
 	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
-	objectFile << "%INCLUDE \"Macros_Along.inc\"" << setw(0) << endl << endl;
+	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
 	
 	emit("SECTION", ".text");
 	emit("global", "_start", "", "; program " + progName);
@@ -149,7 +149,7 @@ void Compiler::emitEpilogue(string operand1, string operand2) {
 
 void Compiler::emitStorage()
 {
-	emit();
+	objectFile << endl;
 	emit("SECTION", ".data");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
@@ -158,7 +158,7 @@ void Compiler::emitStorage()
 			emit(itr->second.getInternalName(), "dd", itr->second.getValue(), "; "+itr->first);
 		}
 	
-	emit();
+	objectFile << endl;
 	emit("SECTION", ".bss");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
