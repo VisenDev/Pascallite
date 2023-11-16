@@ -1,5 +1,5 @@
 CFLAGS= -Wall -Wextra -Wpedantic -std=c++11
-CFILES= *.C *.cpp
+CFILES= *.C stage0.cpp
 BIN=main
 
 all:
