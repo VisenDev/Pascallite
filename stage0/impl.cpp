@@ -43,7 +43,7 @@ void Compiler::parser()
 
 void Compiler::createListingTrailer()
 {
-   this->listingFile << left << setw(26) << "COMPILATION TERMINATED "  << errorCount <<" ERRORS ENCOUNTERED" << std::endl;
+   this->listingFile << endl << left << setw(26) << "COMPILATION TERMINATED "  << errorCount <<" ERRORS ENCOUNTERED" << std::endl;
 }
 
 void Compiler::processError(string err)
@@ -51,7 +51,7 @@ void Compiler::processError(string err)
  //Output err to listingFile
 	++errorCount;
 	listingFile << endl << "ERROR: LINE" << lineNo << ": ";
- this->listingFile << err << std::endl << endl;
+ this->listingFile << err << std::endl;
 	createListingTrailer();
  objectFile.flush();
  exit(EXIT_FAILURE);
