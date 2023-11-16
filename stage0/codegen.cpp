@@ -139,7 +139,7 @@ void Compiler::emitPrologue(string progName, string operand2) {
    objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
 
    emit("SECTION", ".text");
-   emit("global", "_start", "", "; program " + progName);
+   emit("global", "_start", "", "; program " + progName.substr(0, 15));
    objectFile << endl;
    emit("_start:");
 }
