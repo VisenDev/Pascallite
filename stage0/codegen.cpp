@@ -168,7 +168,7 @@ void Compiler::emitStorage()
    for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
       if ((itr->second.getAlloc() == YES) && (itr->second.getMode() == VARIABLE))
       {
-         emit(itr->second.getInternalName(), "resd", "1" , "; "+itr->first); // I hard coded in 1 for units, but this needs to be changed later I think
+         emit(itr->second.getInternalName(), "resd", to_string(itr->second.getUnits()) , "; "+itr->first);
       }
 
 }

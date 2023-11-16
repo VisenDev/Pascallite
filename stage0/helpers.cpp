@@ -14,12 +14,20 @@ bool Compiler::isSpecialSymbol(char c) const {
 }
 
 bool Compiler::isNonKeyId(string s) const {
-   const auto result =  
+	 auto result =  
       std::islower(s[0]) 
       && !isKeyword(s)
       && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !isdigit(c) and !islower(c) and c != '_'; }) == s.end()
       && s[s.length() - 1] != '_';
-   return result;
+	
+	for (uint i = 0; i < s.size(); ++i)
+	{
+		if ((s[i] == '_') && ((i+1) < s.size()))
+			if (s[i+1] == '_')
+				result = 0;
+	}
+	
+   return result ;
 }
 
 bool Compiler::isInteger(string s) const {

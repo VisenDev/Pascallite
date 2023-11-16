@@ -50,7 +50,7 @@ void Compiler::processError(string err)
 {
  //Output err to listingFile
 	++errorCount;
-	listingFile << endl << "ERROR: LINE" << lineNo << ": ";
+	listingFile << endl << "ERROR: LINE " << lineNo << ": ";
  this->listingFile << err << std::endl;
 	createListingTrailer();
  objectFile.flush();
