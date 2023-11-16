@@ -46,7 +46,7 @@ do
    SET=${file:${#DATAPATH}:3}
 
    if echo $IGNORE_DATASETS | grep -q $SET; then
-      output 0 "skipped passing dataset because of missing assembly file"
+      echo "[${SET} SKIPPED] dataset should compile, but is missing assembly file to check the diff"
 
    #   #if the dataset has an assembly file, the compiler should generate an assembly file that passes the diff
    elif test -f "${DATAPATH}${SET}.asm"; then
