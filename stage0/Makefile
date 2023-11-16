@@ -6,7 +6,7 @@ all:
 	g++ ${CFILES} ${CFLAGS} -o ${BIN}
 
 run: all
-	./${BIN} dat/001.asm out/test.list out/test.asm 
+	./test.sh ${BIN}
 
 test:
 	g++ -DTEST ${CFILES} ${CFLAGS} -o ${BIN}
