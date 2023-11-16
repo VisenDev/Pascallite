@@ -72,6 +72,7 @@ UTEST(helperFunctions, isLiteral) {
     UTEST_TRUE(myCompiler.isLiteral("1234"), "\"1234\" is a an integer literal", false);
     UTEST_TRUE(myCompiler.isLiteral("1"), "\"1\" is a an integer literal", false);
     UTEST_TRUE(myCompiler.isLiteral("99999"), "\"99999\" is a an integer literal", false);
+    UTEST_TRUE(myCompiler.isLiteral("-99"), "\"-99\" is a an integer literal", false);
 
     UTEST_FALSE(myCompiler.isLiteral("0x99999"), "\"0x99999\" is not a an integer literal", false);
     UTEST_FALSE(myCompiler.isLiteral("FFAA"), "\"FFAA\" is not a an integer literal", false);

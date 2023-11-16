@@ -109,7 +109,7 @@ void Compiler::constStmts() //token should be NON_KEY_ID
 
    if (y == "not")
    {
-      if (isBoolean(nextToken())) {
+      if (!isBoolean(nextToken())) {
          processError("boolean expected after \"not\"");
       }
       if (token == "true") {

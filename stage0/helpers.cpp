@@ -33,5 +33,5 @@ bool Compiler::isLiteral(string s) const {
    return isBoolean(s) 
       || isInteger(s) 
       || (s.substr(0, 4) == "not " && isBoolean(s.substr(4, s.npos))) 
-      || ((s.substr(0, 2) == "- " || s.substr(0, 2) == "+ " ) && isInteger(s.substr(2, s.npos)));
+      || ((s.substr(0, 1) == "-" || s.substr(0, 1) == "+" ) && isInteger(s.substr(2, s.npos)));
 }

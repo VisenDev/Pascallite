@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 #Pascallite Compiler test script
 #2023 - Robert Burnett
