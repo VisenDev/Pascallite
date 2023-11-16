@@ -49,13 +49,13 @@ string Compiler::genInternalName(storeTypes inType) const
    if (inType == INTEGER)
    {
       newName += 'I';
-      newName += char(intCount+'0');
+      	newName += to_string(intCount);
       ++intCount;
    }
    else if (inType == BOOLEAN)
    {
       newName += 'B';
-      newName += char(boolCount+'0');
+      newName += to_string(boolCount);
       ++boolCount;
    }
    else if (inType == PROG_NAME)
