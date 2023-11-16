@@ -27,6 +27,8 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
          processError("multiple name definition");
       else if (isKeyword(name))
          processError("illegal use of keyword");
+	  else if (symbolTable.size() > 255)
+		 processError("Symbol Table overflow");
       else //create table entry
       {
          if ((name.front() >= 'A') && (name.front() <= 'Z')) {
