@@ -23,11 +23,6 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
          name = name.substr(0, 15);
       }
 
-      //TODO fix this
-      if(/*isNonKeyId(inValue) && */inValue.length() > 15){
-         inValue = inValue.substr(0, 15);
-      }
-
       if (symbolTable.find(name) != symbolTable.end())
          processError("multiple name definition");
       else if (isKeyword(name))
@@ -144,7 +139,7 @@ void Compiler::emitPrologue(string progName, string operand2) {
    objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
 
    emit("SECTION", ".text");
-   emit("global", "_start", "", "; program " + progName);
+   emit("global", "_start", "", "; program " + progName.substr(0, 15));
    objectFile << endl;
    emit("_start:");
 }
