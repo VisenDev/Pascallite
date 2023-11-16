@@ -23,6 +23,11 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
          name = name.substr(0, 15);
       }
 
+      //TODO fix this
+      if(/*isNonKeyId(inValue) && */inValue.length() > 15){
+         inValue = inValue.substr(0, 15);
+      }
+
       if (symbolTable.find(name) != symbolTable.end())
          processError("multiple name definition");
       else if (isKeyword(name))
