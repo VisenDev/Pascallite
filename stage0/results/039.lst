@@ -1,0 +1,13 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|program    stage0no039;   {here is a comment}
+   2|     const yes=true;no=false;
+   3|           small=0;smalleryet=-1;
+   4|           big = 1;  biggeryet = 2;  large = biggeryet;
+   5|		   maybe = not true;
+   6|     var   some,many:integer;
+   7|           right, wrong : boolean;
+   8|     begin
+   9|     end
+  10|period expected

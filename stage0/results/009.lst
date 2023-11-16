@@ -1,0 +1,9 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|program stage0no009;
+   2|    { { need a literal and '=' for a constant
+   3|  also test two opens and one close}
+   4|
+   5|   const car = 2;
+   6|         silly:b"=" expected found :

@@ -1,0 +1,5 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|program stage0no041;
+   2|	var const non-keyword identifier must follow "var"

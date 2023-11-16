@@ -1,0 +1,10 @@
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
+
+LINE NO.              SOURCE STATEMENT
+   1|program stage0no025;
+   2|		 {missing ending bracket
+   3|    const yes = true; no = false;
+   4|         	 var   some : integer;
+   5|         
+   6|    begin end.    
+   7|unexpected end of file, unterminated comment
