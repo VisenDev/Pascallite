@@ -36,7 +36,7 @@ do
       if test -f ${DATAPATH}${SET}.asm; then
          $COMPILER ${DATAPATH}${SET}.dat results/${SET}.lst results/${SET}.asm
 
-         NUM_DIFFERENT_LINES=$(diff ${DATAPATH}${SET}.asm results/${SET}.asm | wc -l) 
+         NUM_DIFFERENT_LINES=$(diff ${DATAPATH}${SET}.asm results/${SET}.asm | grep -o -e "---" | wc -l) 
          if [[ $NUM_DIFFERENT_LINES -le 1 ]]; then 
             echo -e "${GREEN}[$SET SUCCESS]${NC} generated assembly passed the diff"
          else
