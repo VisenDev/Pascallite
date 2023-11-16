@@ -20,9 +20,9 @@ void Compiler::createListingHeader()
 	time_t now = time (NULL);
 	
    this->listingFile << left << setw(42) << "STAGE0: Robert Burnett, Matthew Barton" << ctime(&now)  << std::endl;
-   this->listingFile << setw(22) << "LINE NO. " << "SOURCE STATEMENT" << std::endl;
+   this->listingFile << setw(22) << "LINE NO. " << "SOURCE STATEMENT\n";
    ++lineNo;
-   listingFile << "    " << lineNo << '|';
+   listingFile << "   " << lineNo << '|';
 }
 
 void Compiler::parser()

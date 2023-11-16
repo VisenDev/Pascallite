@@ -6,4 +6,6 @@ const a = 1;
 var
     foo: integer;
 begin
+{test comment}
 end.
+{eof comment}
