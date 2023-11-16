@@ -129,7 +129,7 @@ void Compiler::emit(string label, string instruction, string operands, string co
 void Compiler::emitPrologue(string progName, string operand2) {
    (void) operand2; //suppress warning
 	time_t now = time (NULL);
-	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << setw(0) << ctime(&now);
+	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now);
 	
 	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
 	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
