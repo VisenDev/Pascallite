@@ -1,8 +1,0 @@
-STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
-
-LINE NO.              SOURCE STATEMENT
-   1|program stage0no010;
-   2|    {only one occurrence of 'const' allowed}
-   3|
-   4|   const car = 2;
-   5|   const non-keyword identifier, "begin", or "var" expected

@@ -1,9 +1,0 @@
-STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 20:38:52 2023
-
-LINE NO.              SOURCE STATEMENT
-   1|program stage0no020;
-   2|		 { identifiers should not end with an underscore }
-   3|    const yes = true; no = false;
-   4|          small = 0; smalleryet ={} -1;
-   5|          big = 1; bigger_yet = 2;
-   6|        var   some_ non-keyword identifier must follow "var"

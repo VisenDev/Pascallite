@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/bash
 
 #Pascallite Compiler test script
 #2023 - Robert Burnett
@@ -23,6 +23,10 @@ if [[ ! -e $COMPILER ]]; then
    exit
 fi
 
+if [[ ! -eq results ]]; then
+   mkdir results
+fi
+
 #collect the id number of all datasets
 for file in ${DATAPATH}*.dat
 do
@@ -31,7 +35,9 @@ do
       #   #if the dataset has an assembly file, the compiler should generate an assembly file that passes the diff
       if test -f ${DATAPATH}${SET}.asm; then
          $COMPILER ${DATAPATH}${SET}.dat results/${SET}.lst results/${SET}.asm
-         if diff -q ${DATAPATH}${SET}.asm results/${SET}.asm 1>/dev/null; then 
+
+         NUM_DIFFERENT_LINES=$(diff ${DATAPATH}${SET}.asm results/${SET}.asm | wc -l) 
+         if [[ $NUM_DIFFERENT_LINES -le 1 ]]; then 
             echo -e "${GREEN}[$SET SUCCESS]${NC} generated assembly passed the diff"
          else
             echo -e "${RED}[$SET    FAIL]${NC} generated assembly did not pass the diff"
