@@ -25,11 +25,14 @@ string Compiler::nextToken() //returns the next token or end of file marker
    } else if(islower(ch)){ 
       token = ch;
       nextChar();
+
+      char old_ch;
       while (islower(ch) or isdigit(ch) or ch == '_') {
          token+=ch;
+         old_ch = ch;
          nextChar();
       }
-      if (ch == END_OF_FILE) {
+      if (old_ch == END_OF_FILE) {
          processError("unexpected end of file");
       }
    } else if (isdigit(ch)) {
