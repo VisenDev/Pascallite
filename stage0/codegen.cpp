@@ -107,7 +107,7 @@ string Compiler::whichValue(string name) //tells which value a name has
 }
 
 void Compiler::code(string op, string operand1, string operand2) {
-   (void) operand2; //suppress warning
+	(void) operand2; //suppress warning
 	if (op == "program") {
 		emitPrologue(operand1);
    } else if (op == "end") {
@@ -118,14 +118,18 @@ void Compiler::code(string op, string operand1, string operand2) {
 }
 
 void Compiler::emit(string label, string instruction, string operands, string comment) {	
+	if (operands == "true")
+		operands = "-1";
+	if (operands == "false")
+		operands = "0";
 	objectFile << left;
-	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands << "; " << comment << endl;
+	objectFile << setw(8) << label << setw(8) << instruction << setw(24) << operands <<  comment << endl;
 }
 
 void Compiler::emitPrologue(string progName, string operand2) {
    (void) operand2; //suppress warning
 	time_t now = time (NULL);
-	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now)  << endl;
+	objectFile << left << setw(36) << "; Robert Burnett, Matthew Barton" << ctime(&now);
 	
 	objectFile << "%INCLUDE \"Along32.inc\"" << endl;
 	objectFile << "%INCLUDE \"Macros_Along.inc\"" << endl << endl;
@@ -139,12 +143,13 @@ void Compiler::emitPrologue(string progName, string operand2) {
 void Compiler::emitEpilogue(string operand1, string operand2) {
    (void) operand1; //suppress warning
    (void) operand2; //suppress warning
-	emitStorage();
 	emit("","Exit", "{0}");
+	emitStorage();
 }
 
 void Compiler::emitStorage()
 {
+	emit();
 	emit("SECTION", ".data");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
@@ -153,12 +158,13 @@ void Compiler::emitStorage()
 			emit(itr->second.getInternalName(), "dd", itr->second.getValue(), "; "+itr->first);
 		}
 	
+	emit();
 	emit("SECTION", ".bss");
 	
 	for (auto itr = symbolTable.begin(); itr != symbolTable.end(); ++itr)
 		if ((itr->second.getAlloc() == YES) && (itr->second.getMode() == VARIABLE))
 		{
-			emit(itr->second.getInternalName(), "resd", itr->second.getValue(), "; "+itr->first);
+			emit(itr->second.getInternalName(), "resd", "1" , "; "+itr->first); // I hard coded in 1 for units, but this needs to be changed later I think
 		}
 	
 }

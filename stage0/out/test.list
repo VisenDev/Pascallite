@@ -1,13 +1,16 @@
-STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 17:52:26 2023
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 19:06:26 2023
 
 LINE NO.              SOURCE STATEMENT
-    1|program test;
-    2|const a = 1;
-    3|      b = 10;
-    4|      c = false;
-    5|      d = not c;
-    6|var
-    7|    foo: integer;
-    8|begin
-    9|end.
-    10|COMPILATION TERMINATED# ERRORS ENCOUNTERED
+    1|program stage0no002;
+    2|      {illustrate erroneous use of Pascallite features:}
+    3|	    {odd vs. even length in comment okay          }
+    4|        {should find z+ as illegal name              }
+    5|
+    6|   var x: integer;     
+    7|       z+:boolean;   {z+ is an illegal name}
+    8|       asis: integr;   {'integer' misspelt}
+    9|   const help = 32     {const section must precede var section.}
+    10|       x = true;       {x may not be redefined.}
+    11|       s,t = 0;        {no lists of constants allowed.}
+    12|   begin end;          {program ends with a period, not a semicolon.}
+    13|unexpected end of file
