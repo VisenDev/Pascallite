@@ -1,4 +1,4 @@
-STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 18:42:00 2023
+STAGE0: Robert Burnett, Matthew Barton    Wed Nov 15 18:51:58 2023
 
 LINE NO.              SOURCE STATEMENT
    1|program test;
@@ -9,5 +9,7 @@ LINE NO.              SOURCE STATEMENT
    6|var
    7|    foo: integer;
    8|begin
-   9|end.
-  10|COMPILATION TERMINATED# ERRORS ENCOUNTERED
+   9|{test comment}
+  10|end.
+  11|{eof comment}
+  12|COMPILATION TERMINATED# ERRORS ENCOUNTERED

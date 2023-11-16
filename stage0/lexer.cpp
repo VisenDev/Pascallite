@@ -7,13 +7,12 @@ string Compiler::nextToken() //returns the next token or end of file marker
    token = "";
    while (token == "") {
       if(ch == '{') {
-         auto temp = nextChar();
-         while (temp != END_OF_FILE and temp != '}') { //empty body }
-         if (ch == END_OF_FILE) {
-            processError("unexpected end of file");
-         } else {
-            nextChar();
-         }
+         nextChar();
+         while (ch != END_OF_FILE and ch != '}') {nextChar();} //empty body }
+      if (ch == END_OF_FILE) {
+         processError("unexpected end of file, unterminated comment");
+      } else {
+         nextChar();
       }
    } else if(ch == '}'){
       processError("'}' cannot begin token"); 
@@ -26,14 +25,12 @@ string Compiler::nextToken() //returns the next token or end of file marker
       token = ch;
       nextChar();
 
-      char old_ch;
       while (islower(ch) or isdigit(ch) or ch == '_') {
          token+=ch;
-         old_ch = ch;
          nextChar();
       }
-      if (old_ch == END_OF_FILE) {
-         processError("unexpected end of file");
+      if (ch == END_OF_FILE) {
+         processError("unexpected end of file when parsing token");
       }
    } else if (isdigit(ch)) {
       token = ch;
@@ -41,7 +38,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
          token+=ch;
       }
       if (ch == END_OF_FILE) {
-         processError("unexpected end of file");
+         processError("unexpected end of file when parsing number");
       }
    } else if(ch == END_OF_FILE || ch == EOF) {
       ch = END_OF_FILE;
@@ -66,8 +63,7 @@ char Compiler::nextChar() //returns the next character or end of file marker
    if(ch != EOF && ch != END_OF_FILE) {
       listingFile.put(ch);
       if(ch == '\n') {
-         //TODO use iomanip here for proper formatting
-         //Don't add line number for last line
+         //TODO Don't add line number for last line
          ++lineNo;
          listingFile << right << setw(4) << lineNo << "|";
       }
