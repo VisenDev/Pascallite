@@ -5,7 +5,7 @@
 
 #get full path to the compiler
 COMPILER="$(realpath "${1}")"
-DATAPATH="./dat/"
+DATAPATH="$2"
 IGNORE_DATASETS="051 052"
 
 #ANSI COLOR CODES
@@ -14,8 +14,8 @@ GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
 #make sure arguments are passed correctly
-if [[ "$#" -ne 1 ]]; then
-   echo -e "[ERROR] compiler name must be passed as argument"
+if [[ "$#" -ne 2 ]]; then
+   echo -e "[ERROR] compiler name, then dataset location must be passed as argument"
    exit
 fi
 
@@ -44,8 +44,8 @@ function differences {
 for file in "${DATAPATH}"*.dat
 do
    SET=${file:${#DATAPATH}:3}
-
-   if echo $IGNORE_DATASETS | grep -q $SET; then
+   
+   if echo "$IGNORE_DATASETS" | grep -q "$SET"; then
       echo "[${SET} SKIPPED] dataset should compile, but is missing assembly file to check the diff"
 
    #   #if the dataset has an assembly file, the compiler should generate an assembly file that passes the diff
