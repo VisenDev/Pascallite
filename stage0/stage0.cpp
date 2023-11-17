@@ -1,6 +1,9 @@
-
+//Coded by: Robert Burnett and Matthew Barton
+//Stage0 Compiler for Pascallite
 #include "stage0.h"
-
+#include <iomanip>
+#include <ctime>
+#include <algorithm>
 
 void Compiler::insert(string externalName, storeTypes inType, modes inMode, string inValue,
       allocation inAlloc, int inUnits)
@@ -15,7 +18,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       {
          name += externalName.front();
          externalName.erase(0,1);
-      }
+	  }
       if ((externalName != "") && (externalName.front() == ','))
          externalName.erase(0,1);
 
@@ -44,6 +47,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       }
    }
 }
+
 //Generates unique, legal internal names
 string Compiler::genInternalName(storeTypes inType) const
 {
@@ -200,7 +204,7 @@ void Compiler::prog() //token should be "program"
    beginEndStmt();
 
    if (ch != END_OF_FILE)  {
-      processError("no text may follow \"end\", found \"" + string{ch} + "\"");
+      processError("no text may follow \"end\", found \"" + token + "\"");
    }
 }
 
@@ -446,9 +450,9 @@ void Compiler::createListingHeader()
    time_t now = time (NULL);
 
    this->listingFile << left << setw(42) << "STAGE0: Robert Burnett, Matthew Barton" << ctime(&now)  << std::endl;
-   this->listingFile << setw(22) << "LINE NO. " << "SOURCE STATEMENT\n";
+   this->listingFile << setw(22) << "LINE NO. " << "SOURCE STATEMENT\n\n";
    ++lineNo;
-   listingFile << "   " << lineNo << '|';
+   listingFile << right << setw(5) << lineNo << '|';
 }
 
 void Compiler::parser()
@@ -469,14 +473,16 @@ void Compiler::parser()
 
 void Compiler::createListingTrailer()
 {
-   this->listingFile << endl << left << setw(26) << "COMPILATION TERMINATED "  << errorCount <<" ERRORS ENCOUNTERED" << std::endl;
+   this->listingFile << endl << left << setw(28) << "COMPILATION TERMINATED "  << errorCount <<" ERROR";
+	   if (errorCount != 1) listingFile << 'S';
+	   listingFile << " ENCOUNTERED" << std::endl;
 }
 
 void Compiler::processError(string err)
 {
    //Output err to listingFile
    ++errorCount;
-   listingFile << endl << "ERROR: LINE " << lineNo << ": ";
+   listingFile << endl << "Error: Line " << lineNo << ": ";
    this->listingFile << err << std::endl;
    createListingTrailer();
    objectFile.flush();
@@ -553,7 +559,7 @@ char Compiler::nextChar() //returns the next character or end of file marker
       if((ch == '\n') && !isEnd) {
          //TODO Don't add line number for last line
          ++lineNo;
-         listingFile << right << setw(4) << lineNo << "|";
+         listingFile << right << setw(5) << lineNo << "|";
       }
    }
 
