@@ -37,7 +37,7 @@ function output {
 }
 
 function differences {
-   return $(diff "$1" "$2" | grep -o -e "---" | wc -l) 
+   return $(($(diff "$1" "$2" | wc -l) - 3))
 }
 
 #collect the id number of all datasets
