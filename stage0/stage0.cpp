@@ -1,7 +1,9 @@
 //Coded by: Robert Burnett and Matthew Barton
 //Stage0 Compiler for Pascallite
 #include "stage0.h"
-
+#include <iomanip>
+#include <ctime>
+#include <algorithm>
 
 void Compiler::insert(string externalName, storeTypes inType, modes inMode, string inValue,
       allocation inAlloc, int inUnits)
@@ -16,7 +18,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       {
          name += externalName.front();
          externalName.erase(0,1);
-      }
+      
       if ((externalName != "") && (externalName.front() == ','))
          externalName.erase(0,1);
 
