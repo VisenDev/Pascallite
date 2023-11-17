@@ -23,8 +23,8 @@ bool Compiler::isNonKeyId(string s) const {
 	for (uint i = 0; i < s.size(); ++i)
 	{
 		if ((s[i] == '_') && ((i+1) < s.size()))
-			if (s[i+1] == '_')
-				result = 0;
+			if (s[i+1] == '_') 	// it turns out this is sufficient as the allowed characters in the string is already checked to be valid
+				result = 0;     //so we only need to check that '_' doesn't follow '_'
 	}
 	
    return result ;
