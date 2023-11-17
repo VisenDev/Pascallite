@@ -47,6 +47,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       }
    }
 }
+}
 //Generates unique, legal internal names
 string Compiler::genInternalName(storeTypes inType) const
 {
