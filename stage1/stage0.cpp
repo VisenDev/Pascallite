@@ -253,7 +253,10 @@ void Compiler::beginEndStmt() //token should be "begin"
    if (token != "begin") {
       processError("keyword \"begin\" expected");
    }
-   if (nextToken() != "end") {
+   
+   execStmts();
+   
+   if (token != "end") {
       processError("keyword \"end\" expected");
    } 
    if (nextToken() != ".") {
@@ -511,6 +514,8 @@ string Compiler::nextToken() //returns the next token or end of file marker
          nextChar();
       } else if (isSpecialSymbol(ch)) {
          token = ch;
+		 if (isSpecialSymbol(sourceFile.peek()))
+			 token += nextChar();
          nextChar();
       } else if(islower(ch)){ 
          token = ch;
