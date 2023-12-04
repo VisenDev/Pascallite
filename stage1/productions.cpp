@@ -1,6 +1,7 @@
 #include "stage1.h"
 
 void Compiler::execStmts(){
+   nextToken();
    if (token == "end") {
       return;
    }

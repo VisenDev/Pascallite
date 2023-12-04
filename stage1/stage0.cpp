@@ -296,12 +296,13 @@ void Compiler::constStmts() //token should be NON_KEY_ID
       if (!isBoolean(nextToken())) {
          
          auto table_value = symbolTable.find(token);
+         
          if(table_value != symbolTable.end() && isBoolean(table_value->second.getValue()))  {
             y = table_value->second.getValue() == "true" ? "false" : "true";
          } else {
             processError("boolean expected after \"not\"");
          }
-      }
+      } else 
       if (token == "true") {
          y = "false";
       } else {

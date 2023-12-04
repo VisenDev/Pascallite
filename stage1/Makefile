@@ -5,3 +5,6 @@ BIN= stage1
 all: ${CFILES}
 	g++  ${CFILES} ${CFLAGS} -o ${BIN}
 
+
+run: all
+	./${BIN} ../stage0/dat/052.dat test.lst test.asm
