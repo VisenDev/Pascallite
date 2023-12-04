@@ -1,4 +1,4 @@
-#include <stage1.h>
+#include "stage1.h"
 
 void pushOperator(string op);
 string popOperator();
