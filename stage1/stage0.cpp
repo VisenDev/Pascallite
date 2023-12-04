@@ -552,19 +552,25 @@ string Compiler::nextToken() //returns the next token or end of file marker
 
 char Compiler::nextChar() //returns the next character or end of file marker
 {
+	static bool newLine = 0;
    ch = sourceFile.get();
 
    if(sourceFile.eof() or ch == EOF){
       ch = END_OF_FILE;//use a special character to designate end of file
    }
 
+   if (newLine == 1)
+	{
+		++lineNo;
+		listingFile << right << setw(5) << lineNo << '|';
+		newLine = 0;
+	}
+	
    //print to listing file (starting new line if necessary)
    if(ch != EOF && ch != END_OF_FILE) {
       listingFile.put(ch);
       if((ch == '\n') && !isEnd) {
-         //TODO Don't add line number for last line
-         ++lineNo;
-         listingFile << right << setw(5) << lineNo << "|";
+         newLine = 1;
       }
    }
 
