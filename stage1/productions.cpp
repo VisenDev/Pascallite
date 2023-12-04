@@ -68,7 +68,7 @@ void Compiler::writeStmt(){
    emitWriteCode(csv);
 
 }
-void Compiler::express(){ }
+void Compiler::express(){}
 void Compiler::expresses(){}      // stage 1, production 10
 void Compiler::term(){}           // stage 1, production 11
 void Compiler::terms(){}          // stage 1, production 12
