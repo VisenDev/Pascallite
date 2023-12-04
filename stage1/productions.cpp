@@ -68,10 +68,115 @@ void Compiler::writeStmt(){
    emitWriteCode(csv);
 
 }
-void Compiler::express(){}
-void Compiler::expresses(){}      // stage 1, production 10
-void Compiler::term(){}           // stage 1, production 11
-void Compiler::terms(){}          // stage 1, production 12
-void Compiler::factor(){}         // stage 1, production 13
-void Compiler::factors(){}        // stage 1, production 14
-void Compiler::part(){}           // stage 1, production 15
+void Compiler::express(){
+   if(token != "not"
+      and token != "true"
+      and token != "false"
+      and token != "("
+      and token != "+"
+      and token != "-"
+      and !isInteger(token)
+      and !isNonKeyId(token)
+   ){
+      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+   }
+   term();
+   expresses();
+}
+
+void Compiler::expresses(){
+   if (token == "<>"
+      or token == "="
+      or token == "<="
+      or token == "=>"
+      or token == "<"
+      or token == ">"
+   ){
+      //TODO relops
+      //should be right called  here before term and expresses
+      term();
+      expresses();
+   } else if (token == ")" or token == ";") {
+      return;
+   } else {
+      processError("expected REL_OP, \")\", or \";\"");
+   }
+}
+void Compiler::term(){
+    if(token != "not"
+      and token != "true"
+      and token != "false"
+      and token != "("
+      and token != "+"
+      and token != "-"
+      and !isInteger(token)
+      and !isNonKeyId(token)
+   ){
+      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+   }
+    factor();
+    terms();
+}
+void Compiler::terms(){
+   if(token == "-" or token == "+" or token == "or") {
+      //TODO 
+      //add_level_op should be herek
+      factor();
+      terms();
+   } else if (token == "<>"
+      or token == "="
+      or token == "<="
+      or token == "=>"
+      or token == "<"
+      or token == ">"
+   ) {
+      return;
+   } else {
+      processError("expected REL_OP, \")\", or \";\"");
+   }
+} 
+void Compiler::factor(){
+     if(token != "not"
+      and token != "true"
+      and token != "false"
+      and token != "("
+      and token != "+"
+      and token != "-"
+      and !isInteger(token)
+      and !isNonKeyId(token)
+   ){
+      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+     }
+     part();
+     factors();
+   
+}
+void Compiler::factors(){
+   if(token == "*"
+      or token == "div"
+      or token == "mod"
+      or token == "and"
+   ){
+      //TODO MULT_LEVEL_OP here
+      part();
+      factors();
+   } else if (token == "<>"
+      or token == "="
+      or token == "<="
+      or token == "=>"
+      or token == "<"
+      or token == ">"
+      or token == ")"
+      or token == ";"
+      or token == "+"
+      or token == "-"
+      or token == "or"
+   ) {
+      return;
+   } else {
+      processError("expected ADD_LEVEL_OP, REL_OP, \")\", or \";\"");
+   }
+}      
+void Compiler::part(){
+   //TODO implement this functions
+}
