@@ -1,0 +1,15 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no120;
+    2|  const  a = true;
+    3|         b = false;
+    4|  var    c,d,e: boolean;
+    5|
+    6|  begin
+    7|    read(d,e);
+
+Error: Line 7: can't read variables of this type
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

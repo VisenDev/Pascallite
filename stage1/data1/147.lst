@@ -1,0 +1,17 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:27 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no147;
+    2|const
+    3|  five = 5;
+    4|var
+    5|  a, b, c : integer;
+    6|begin
+    7|  a := five * (3 + 34);
+    8|  b := a + -5 mod a;
+    9|  c := (a + b) - (b - a);
+   10|  write(a, b, c);
+   11|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

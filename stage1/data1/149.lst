@@ -1,0 +1,14 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:27 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no149;
+    2|var
+    3|  a, b, c, d, e, f : integer;
+    4|begin
+    5|  read(a, b, c, d, e, f);
+    6|  a := (a + b) + ((c + d) + (e + f));
+    7|  write(a);
+    8|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

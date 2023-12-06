@@ -1,0 +1,23 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no115;
+    2|        {demonstrate correct usage of Pascal assignment statements.}
+    3|  const  yes = true;
+    4|         no = false;
+    5|  var    a,b,c: boolean;
+    6|         w,z: boolean;
+    7|         d,e: boolean;
+    8|  begin
+    9|    d := yes and no;
+   10|    a := (((yes)));
+   11|    b := yes or no;
+   12|    c := not b;
+   13|    write(d);
+   14|    write(a);
+   15|    write(b);
+   16|    write(c);
+   17|  end .
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

@@ -1,0 +1,24 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no105;
+    2|        {demonstrate correct usage of Pascallite features.}
+    3|  const  zero = 0; five = 5;
+    4|  var    a,b,c: integer; w,z: integer;
+    5|  begin
+    6|  read(a);
+    7|  read(b);
+    8|  read(c);
+    9|  read(z);
+   10|  z := b mod a;
+   11|  w := c * z;
+   12|  a := -z;
+   13|  b := +c;
+   14|  write(z);
+   15|  write(w);
+   16|  write(a);
+   17|  write(b);
+   18| end .
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

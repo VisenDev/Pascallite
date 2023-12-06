@@ -1,0 +1,15 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no114;
+    2|        {demonstrate incorrect usage of Pascal assignment statements.}
+    3|  const  zero = 0;
+    4|         five = 5;
+    5|  var    a,b,c,z,  d,e: integer;
+    6|  begin
+    7|    d := five * a ;
+    8|    z:=b + + +5
+Error: Line 8: expected '(', integer, or non-keyword id; found +
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

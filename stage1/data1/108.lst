@@ -1,0 +1,13 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no108;
+    2|  const w=3;x=true;
+    3|  var   a,b,c,d,e:integer;
+    4|  begin
+    5|    read(a);
+    6|    d := a+x; 
+Error: Line 6: binary '+' requires integer operands
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

@@ -1,0 +1,10 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:53 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no031;
+    2|  { smallest syntactically correct program }
+    3|    begin
+    4|    end.    
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

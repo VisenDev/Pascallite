@@ -1,0 +1,17 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:26 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no132;
+    2|var
+    3|  a, b : integer;
+    4|  c    : boolean;
+    5|begin
+    6|  read(a,b);
+    7|  c := a <> b;
+    8|  write(a, b, c);
+    9|  c := a = b;
+   10|  write(a, b, c);
+   11|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

@@ -1,0 +1,71 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:53 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program
+    2|stage0no033;
+    3|{
+    4|this
+    5|is
+    6|001.dat
+    7|with
+    8|each
+    9|token
+   10|on
+   11|a
+   12|separate
+   13|line
+   14|}
+   15|const
+   16|yes
+   17|=
+   18|true
+   19|;
+   20|no
+   21|=
+   22|false
+   23|;
+   24|small
+   25|=
+   26|0
+   27|;
+   28|smalleryet
+   29|=
+   30|-
+   31|1
+   32|;
+   33|big
+   34|=
+   35|1
+   36|;
+   37|biggeryet
+   38|=
+   39|2
+   40|;
+   41|large
+   42|=
+   43|biggeryet
+   44|;
+   45|maybe
+   46|=
+   47|not
+   48|true
+   49|;
+   50|var
+   51|some
+   52|,
+   53|many
+   54|:
+   55|integer
+   56|;
+   57|right
+   58|,
+   59|wrong
+   60|:
+   61|boolean
+   62|;
+   63|begin
+   64|end
+   65|.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

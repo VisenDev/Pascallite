@@ -1,0 +1,15 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no112;
+    2|        {demonstrate incorrect usage of Pascal assignment statements.}
+    3|  const  zero = 0;  five = 5;
+    4|  var    a,b,c: integer;
+    5|         w,z: integer;
+    6|         d,e: boolean;
+    7|  begin
+    8|    d := five * a; 
+Error: Line 8: incompatible types for operator ':='
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

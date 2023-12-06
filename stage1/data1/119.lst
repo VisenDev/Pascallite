@@ -1,0 +1,24 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no119;
+    2|        {correct}
+    3|  const  a = true;
+    4|         b = a;
+    5|  var    c,d,e: boolean;
+    6|         f,g,h: integer;
+    7|
+    8|  begin
+    9|    read(f);
+   10|    read(g);
+   11|    read(h);
+   12|    c := f <= g;
+   13|    d := a = b;
+   14|    e := f = h;
+   15|    write(c);
+   16|    write(d);
+   17|    write(e);
+   18|  end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

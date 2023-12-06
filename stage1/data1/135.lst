@@ -1,0 +1,20 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:26 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no135;
+    2|var
+    3|  a, b : boolean;
+    4|begin
+    5|  a := true;
+    6|  b := not a;
+    7|  write(a, b);
+    8|  b := not true;
+    9|  write(b);
+   10|  b := not false;
+   11|  write(b);
+   12|  b := not (a = b);
+   13|  write(a,b);
+   14|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

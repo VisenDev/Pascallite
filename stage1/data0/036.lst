@@ -1,0 +1,9 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:54 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no036_this_name_is_really_long;
+    2|    begin
+    3|    end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

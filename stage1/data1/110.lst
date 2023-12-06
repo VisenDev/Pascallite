@@ -1,0 +1,13 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no110;
+    2|        {demonstrate incorrect usage of Pascal assignment statements.}
+    3|  const  zero = 0;  five = 5;
+    4|  var    a,b,c:  integer;        w,z: integer;
+    5|  begin
+    6|    a := five * m;
+Error: Line 6: reference to undefined symbol m
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

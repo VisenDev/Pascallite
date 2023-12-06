@@ -1,0 +1,14 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:26 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no124;
+    2|  { requires 1 temporary }
+    3|var    sum,a,b,c,d,e,f,g,h,i,j,k,l,m,n : integer;
+    4|begin
+    5|  read(a,b,c,d,e,f,g,h,i,j,k,l,m,n);
+    6|  sum := (a-(b-(c-(d-(e-(f-(g-(h-(i-(j-(k-(l-(m-n)))))))))))));
+    7|  write(sum);
+    8|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

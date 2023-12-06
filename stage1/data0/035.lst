@@ -1,0 +1,10 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:54 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|{ comments are OK before the program statement }
+    2|program stage0no035;
+    3|    begin
+    4|    end.    {comments are OK after end.}
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

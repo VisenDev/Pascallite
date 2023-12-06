@@ -1,0 +1,16 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no118;
+    2|        {demonstrate incorrect usage of Pascal assignment statements.}
+    3|  const  a = true;
+    4|         b = false;
+    5|  var    c,d,e: boolean;
+    6|         w,z,y,x: integer;
+    7|  begin
+    8|    c := (w=z) and (a <>b);
+    9|    e := w > z and y > 
+Error: Line 9: binary 'and' requires boolean operands
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED

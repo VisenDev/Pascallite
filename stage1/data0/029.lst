@@ -1,0 +1,13 @@
+STAGE0:  YOUR NAME(S)       Mon Nov  7 15:02:53 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage0no029;
+    2|		 { comments after "end." are OK }
+    3|    const yes = true; no = false;
+    4|          small = 0; smalleryet ={} -1;
+    5|          big = 1; bigger_yet = 2;
+    6|        var   some : integer;
+    7|    begin   end.    { this is a comment after "end." }
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

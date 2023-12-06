@@ -1,0 +1,14 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:26 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no133;
+    2|var
+    3|  a, b, r : integer;
+    4|begin
+    5|  read(a, b);
+    6|  r := -(b div (2 * a));
+    7|  write(a, b, r);
+    8|end.
+
+COMPILATION TERMINATED      0 ERRORS ENCOUNTERED

@@ -1,0 +1,17 @@
+STAGE1:  YOUR NAME(S)       Fri Nov 18 15:45:25 2022
+
+LINE NO.              SOURCE STATEMENT
+
+    1|program stage1no113;
+    2|        {demonstrate incorrect usage of Pascal assignment statements.}
+    3|  const  zero = 0;
+    4|         five = 5;
+    5|  var    a,b,c: integer;
+    6|         w,z: integer;
+    7|         d,e: boolean;
+    8|  begin
+    9|    c := five * a
+   10|    b:
+Error: Line 10: one of "*", "and", "div", "mod", ")", "+", "-", ";", "<", "<=", "<>", "=", ">", ">=", or "or" expected
+
+COMPILATION TERMINATED      1 ERROR ENCOUNTERED
