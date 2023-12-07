@@ -152,6 +152,7 @@ void Compiler::factor(){
      factors();
    
 }
+
 void Compiler::factors(){
    if(token == "*"
       or token == "div"
@@ -179,5 +180,81 @@ void Compiler::factors(){
    }
 }      
 void Compiler::part(){
-   //TODO implement this functions
+   if(token == "not"){
+      nextToken();
+      if(token == "(") {
+         nextToken();
+         express();
+         nextToken();
+         if(token != ")") {
+            processError("expected \")\" after (...");
+         }
+         nextToken();
+      } else if(isBoolean(token)) {
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      } else if(isNonKeyId(token)) {
+
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      }
+   } else if(token == "+"){
+      nextToken();
+      if(token == "(") {
+         nextToken();
+         express();
+         nextToken();
+         if(token != ")") {
+            processError("expected \")\" after (...");
+         }
+         nextToken();
+      } else if(isBoolean(token)) {
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      } else if(isNonKeyId(token)) {
+
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      }
+   } else if(token == "-"){
+      nextToken();
+      if(token == "(") {
+         nextToken();
+         express();
+         nextToken();
+         if(token != ")") {
+            processError("expected \")\" after (...");
+         }
+         nextToken();
+      } else if(isBoolean(token)) {
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      } else if(isNonKeyId(token)) {
+
+         //TODO am I supposed to have a code here or something?
+         //or just return
+         nextToken();
+      }
+   } else if (token == "(") {
+      nextToken();
+      express();
+      nextToken();
+      if(token != ")") {
+         processError("expected \")\" after (...");
+      }
+      nextToken();
+   } else if(isInteger(token)){
+      nextToken();
+   } else if(isBoolean(token)) {
+      nextToken();
+   } else if(isNonKeyId(token)) {
+      nextToken();
+   } else {
+      processError("expected: not, +, -, (, INTEGER, BOOLEAN, NON_KEY_ID");
+   }
 }

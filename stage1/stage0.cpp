@@ -298,6 +298,7 @@ void Compiler::constStmts() //token should be NON_KEY_ID
          auto table_value = symbolTable.find(token);
          
          if(table_value != symbolTable.end() && isBoolean(table_value->second.getValue()))  {
+            std::cout << "table value found for " << table_value->second.getInternalName() << " is " << table_value->second.getValue() << "\n";
             y = table_value->second.getValue() == "true" ? "false" : "true";
          } else {
             processError("boolean expected after \"not\"");
