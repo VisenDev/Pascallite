@@ -18,7 +18,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       {
          name += externalName.front();
          externalName.erase(0,1);
-	  }
+      }
       if ((externalName != "") && (externalName.front() == ','))
          externalName.erase(0,1);
 
@@ -253,9 +253,9 @@ void Compiler::beginEndStmt() //token should be "begin"
    if (token != "begin") {
       processError("keyword \"begin\" expected");
    }
-   
+
    execStmts();
-   
+
    if (token != "end") {
       processError("keyword \"end\" expected");
    } 
@@ -294,9 +294,9 @@ void Compiler::constStmts() //token should be NON_KEY_ID
    if (y == "not")
    {
       if (!isBoolean(nextToken())) {
-         
+
          auto table_value = symbolTable.find(token);
-         
+
          if(table_value != symbolTable.end() && isBoolean(table_value->second.getValue()))  {
             std::cout << "table value found for " << table_value->second.getInternalName() << " is " << table_value->second.getValue() << "\n";
             y = table_value->second.getValue() == "true" ? "false" : "true";
@@ -304,11 +304,11 @@ void Compiler::constStmts() //token should be NON_KEY_ID
             processError("boolean expected after \"not\"");
          }
       } else 
-      if (token == "true") {
-         y = "false";
-      } else {
-         y = "true";
-      }
+         if (token == "true") {
+            y = "false";
+         } else {
+            y = "true";
+         }
    }
 
    if (nextToken() != ";") {
@@ -397,7 +397,8 @@ bool Compiler::isKeyword(string s) const {
 }
 
 bool Compiler::isSpecialSymbol(char c) const {
-   auto symbols = { '=' , ':' , ',' , ';' , '.' , '+' , '-' };
+   //TODO audit this
+   auto symbols = { '=' , ':' , ',' , ';' , '.' , '+' , '-', '(', ')', '<', '>', '*'};
    return std::find(symbols.begin(), symbols.end(), c) != symbols.end();
 }
 
@@ -479,8 +480,8 @@ void Compiler::parser()
 void Compiler::createListingTrailer()
 {
    this->listingFile << endl << left << setw(28) << "COMPILATION TERMINATED "  << errorCount <<" ERROR";
-	   if (errorCount != 1) listingFile << 'S';
-	   listingFile << " ENCOUNTERED" << std::endl;
+   if (errorCount != 1) listingFile << 'S';
+   listingFile << " ENCOUNTERED" << std::endl;
 }
 
 void Compiler::processError(string err)
@@ -505,56 +506,57 @@ string Compiler::nextToken() //returns the next token or end of file marker
       if(ch == '{') {
          nextChar();
          while (ch != END_OF_FILE and ch != '}') {nextChar();} //empty body }
-         if (ch == END_OF_FILE) {
-            processError("unexpected end of file, unterminated comment");
-         } else {
-            nextChar();
-         }
-      } else if(ch == '}'){
-         processError("'}' cannot begin token"); 
-      } else if (isspace(ch)) {
+      if (ch == END_OF_FILE) {
+         processError("unexpected end of file, unterminated comment");
+      } else {
          nextChar();
-      } else if (isSpecialSymbol(ch)) {
-         token = ch;
-		 if (isSpecialSymbol(sourceFile.peek()))
-			 token += nextChar();
-         nextChar();
-      } else if(islower(ch)){ 
-         token = ch;
-         nextChar();
-
-         while (islower(ch) or isdigit(ch) or ch == '_') {
-            token+=ch;
-            nextChar();
-         }
-         if (ch == END_OF_FILE) {
-            processError("unexpected end of file when parsing token");
-         }
-      } else if (isdigit(ch)) {
-         token = ch;
-         while (isdigit(nextChar())) {
-            token+=ch;
-         }
-         if (ch == END_OF_FILE) {
-            processError("unexpected end of file when parsing number");
-         }
-      } else if(ch == END_OF_FILE || ch == EOF) {
-         ch = END_OF_FILE;
-         token = END_OF_FILE;
-      } else{
-         processError("illegal symbol, symbol \"" + string{ch} + "\" is not allowed");
       }
+   } else if(ch == '}'){
+      processError("'}' cannot begin token"); 
+   } else if (isspace(ch)) {
+      nextChar();
+   } else if (isSpecialSymbol(ch)) {
+      token = ch;
+      if ((token == "<" or token == ":" or token == ">") and isSpecialSymbol(sourceFile.peek())) {
+         token += nextChar();
+      }
+      nextChar();
+   } else if(islower(ch)){ 
+      token = ch;
+      nextChar();
+
+      while (islower(ch) or isdigit(ch) or ch == '_') {
+         token+=ch;
+         nextChar();
+      }
+      if (ch == END_OF_FILE) {
+         processError("unexpected end of file when parsing token");
+      }
+   } else if (isdigit(ch)) {
+      token = ch;
+      while (isdigit(nextChar())) {
+         token+=ch;
+      }
+      if (ch == END_OF_FILE) {
+         processError("unexpected end of file when parsing number");
+      }
+   } else if(ch == END_OF_FILE || ch == EOF) {
+      ch = END_OF_FILE;
+      token = END_OF_FILE;
+   } else{
+      processError("illegal symbol, symbol \"" + string{ch} + "\" is not allowed");
    }
-   if (token == "end") {
-      isEnd = 1;
-   }
-   return token;
+}
+if (token == "end") {
+   isEnd = 1;
+}
+return token;
 }
 
 
 char Compiler::nextChar() //returns the next character or end of file marker
 {
-	static bool newLine = 0;
+   static bool newLine = 0;
    ch = sourceFile.get();
 
    if(sourceFile.eof() or ch == EOF){
@@ -562,12 +564,12 @@ char Compiler::nextChar() //returns the next character or end of file marker
    }
 
    if (newLine == 1)
-	{
-		++lineNo;
-		listingFile << right << setw(5) << lineNo << '|';
-		newLine = 0;
-	}
-	
+   {
+      ++lineNo;
+      listingFile << right << setw(5) << lineNo << '|';
+      newLine = 0;
+   }
+
    //print to listing file (starting new line if necessary)
    if(ch != EOF && ch != END_OF_FILE) {
       listingFile.put(ch);

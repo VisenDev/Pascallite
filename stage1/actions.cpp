@@ -1,6 +1,6 @@
 #include "stage1.h"
 
-void pushOperator(string op);
-string popOperator();
-void pushOperand(string operand);
-string popOperand();
+void   Compiler::pushOperator(string op){}
+string Compiler::popOperator(){}
+void   Compiler::pushOperand(string operand){}
+string Compiler::popOperand(){}

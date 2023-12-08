@@ -7,7 +7,7 @@ void Compiler::execStmts(){
    }
 
    if(token != "read" and token != "write" and !isNonKeyId(token)){
-      processError("expected \"read\", \"write\", \"end\", or \"non key id\"");
+      processError("[execStmts] expected \"read\", \"write\", or \"NON_KEY_ID\", found \"" + token + "\"");
    }
    execStmt();
    execStmts();
@@ -22,12 +22,32 @@ void Compiler::execStmt(){
    } else if(isNonKeyId(token)) {
       assignStmt();
    } else {
-      processError("expected \"read\", \"write\", or \"non key id\"");
+      processError("[execStmt] expected \"read\", \"write\", or \"NON_KEY_ID\", found \"" + token + "\"");
    }
 }
 
-void Compiler::assignStmt(){}     // stage 1, production 4
-                                  // 
+void Compiler::assignStmt(){
+   if(!isNonKeyId(token)) {
+      processError("expected NON_KEY_ID in assignStmt");
+   }
+   const auto lhs = token;
+   nextToken();
+   if(token != ":=") {
+      processError("expected \":=\" after NON_KEY_ID in assignStmt");
+   }
+   nextToken();
+   express();
+   nextToken();
+   if(token != ";") {
+      processError("expected \";\" after assignStmt");
+   }
+   //TODO 
+   //IMPORTANT
+   //FINISH ACTUALLY EMITTING CODE FROM THIS
+   //emitAssignCode(lhs);
+   code(popOperator(), popOperand(), popOperand());
+} 
+
 void Compiler::readStmt(){
    if(token != "read"){
       processError("\"read\" expected");
@@ -38,9 +58,8 @@ void Compiler::readStmt(){
    }
    nextToken();
    auto csv = ids();
-   nextToken();
    if(token != ")") {
-      processError("\")\" expected after \"read(...\"");
+      processError("\")\" expected after \"read(...\", found \" " + token + "\"");
    }
    nextToken();
    if(token != ";") {
@@ -58,9 +77,8 @@ void Compiler::writeStmt(){
    }
    nextToken();
    auto csv = ids();
-   nextToken();
    if(token != ")") {
-      processError("\")\" expected after \"write(...\"");
+      processError("\")\" expected after \"write(...\", found \" " + token + "\"");
    }
    nextToken();
    if(token != ";") {
@@ -79,7 +97,7 @@ void Compiler::express(){
       and !isInteger(token)
       and !isNonKeyId(token)
    ){
-      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+      processError("[express] expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
    }
    term();
    expresses();
@@ -100,7 +118,7 @@ void Compiler::expresses(){
    } else if (token == ")" or token == ";") {
       return;
    } else {
-      processError("expected REL_OP, \")\", or \";\"");
+      processError("[expresses] expected REL_OP, \")\", or \";\", found " + token);
    }
 }
 void Compiler::term(){
@@ -113,7 +131,7 @@ void Compiler::term(){
       and !isInteger(token)
       and !isNonKeyId(token)
    ){
-      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+      processError("[term] expected true, false, (, +, -, INTEGER, or NON_KEY_ID, found \"" + token + "\"");
    }
     factor();
     terms();
@@ -160,6 +178,9 @@ void Compiler::factors(){
       or token == "and"
    ){
       //TODO MULT_LEVEL_OP here
+      nextToken();
+      //replace nextToken() with multi level op parsing
+      
       part();
       factors();
    } else if (token == "<>"
@@ -176,7 +197,7 @@ void Compiler::factors(){
    ) {
       return;
    } else {
-      processError("expected ADD_LEVEL_OP, REL_OP, \")\", or \";\"");
+      processError("[factors] expected ADD_LEVEL_OP, REL_OP, \")\", or \";\", found " + token);
    }
 }      
 void Compiler::part(){
@@ -250,11 +271,14 @@ void Compiler::part(){
       nextToken();
    } else if(isInteger(token)){
       nextToken();
+      //TODO do something
    } else if(isBoolean(token)) {
       nextToken();
+      //TODO do something
    } else if(isNonKeyId(token)) {
       nextToken();
+      //TODO do something
    } else {
-      processError("expected: not, +, -, (, INTEGER, BOOLEAN, NON_KEY_ID");
+      processError("[part] expected: not, +, -, (, INTEGER, BOOLEAN, NON_KEY_ID, found\"" + token + "\"");
    }
 }
