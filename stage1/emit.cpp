@@ -5,7 +5,19 @@
 //void Compiler::emitPrologue(string progName, string){}
 //void Compiler::emitEpilogue(string, string){}
 //void Compiler::emitStorage(){}
-void Compiler::emitReadCode(string operand, string){}
+void Compiler::emitReadCode(string operand, string)
+{
+	auto itr = symbolTable.find(operand);
+	if (itr == symbolTable.end())
+		processError("Symbol "+operand+" is undefined");
+	emit("", "call", "ReadInt", "read int; value placed in eax");
+	
+	if (itr->second.getDataType() != INTEGER)
+		processError("can't read variables of this type");
+	
+	emit("", "mov", "["+itr->second.getInternalName()+"],eax", "store eax at "+operand);
+	
+}
 void Compiler::emitWriteCode(string operand, string){}
 void Compiler::emitAssignCode(string operand1, string operand2){}         // op2 = op1
                                                                           // 
