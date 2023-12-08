@@ -1,5 +1,12 @@
 #include "stage1.h"
 
+//include files to avoid linking
+#include "actions.cpp"
+#include "emit.cpp"
+#include "productions.cpp"
+#include "stage0.cpp"
+#include "temp.cpp"
+
 int main(int argc, char **argv)
 {
   // This program is the stage1 compiler for Pascallite.  It will accept
