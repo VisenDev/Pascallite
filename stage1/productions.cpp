@@ -125,7 +125,7 @@ void Compiler::expresses(){
       cout << "           " << token << endl;
       term();
       code(popOperator(), popOperand(), popOperand());
-      nextToken();
+      //nextToken();
       cout << "           " << token << endl;
       expresses();
    } else if (token == ")" or token == ";") {
@@ -138,8 +138,8 @@ void Compiler::expresses(){
 bool isAddLevelOp(string token) {
    return (
       token == "or"
-      and token == "+"
-      and token == "-"
+      or token == "+"
+      or token == "-"
    );
 }
 
@@ -250,11 +250,12 @@ void Compiler::part(){
          
          nextToken();
          express();
-         nextToken();
+     //    nextToken();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
          code("not", popOperand());
+         nextToken();
       } else if(isBoolean(token)) {
          pushOperand(token == "true" ? "false" : "true" );
       } else if(isNonKeyId(token)) {
@@ -270,7 +271,6 @@ void Compiler::part(){
       if(token == "(") {
          nextToken();
          express();
-         nextToken();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
@@ -289,7 +289,6 @@ void Compiler::part(){
       if(token == "(") {
          nextToken();
          express();
-         nextToken();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
