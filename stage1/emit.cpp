@@ -1,5 +1,12 @@
 #include "stage1.h"
 
+#define EXISTS(operand) \
+   (symbolTable.find(operand) != symbolTable.end())
+#define DATATYPE(operand) \
+   (symbolTable.find(operand)->second.getDataType())
+#define NAME(operand) \
+   (symbolTable.find(operand)->second.getInternalName())
+
 //void Compiler::emit(string label, string instruction, string operands,
 //         string comment){}
 //void Compiler::emitPrologue(string progName, string){}
@@ -174,7 +181,17 @@ void Compiler::emitNegationCode(string operand1, string){}           // -op1
 void Compiler::emitNotCode(string operand1, string){}                // !op1
 void Compiler::emitAndCode(string operand1, string operand2){}            // op2 && op1
 void Compiler::emitOrCode(string operand1, string operand2){}             // op2 || op1
-void Compiler::emitEqualityCode(string operand1, string operand2){}       // op2 == op1
+                                                                          
+void Compiler::emitEqualityCode(string operand1, string operand2){
+	if (!EXISTS(operand1) or !EXISTS(operand2)){
+		processError("undefined operands");
+
+      //TODO check if these actually need to be integer
+   } else if(DATATYPE(operand1) != INTEGER or (DATATYPE(operand2) != INTEGER)) {
+		processError("operands to = much be INTEGER");
+   }
+   
+}       // op2 == op1
 void Compiler::emitInequalityCode(string operand1, string operand2){}     // op2 != op1
 void Compiler::emitLessThanCode(string operand1, string operand2){}       // op2 <  op1
 void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2){} // op2 <= op1
