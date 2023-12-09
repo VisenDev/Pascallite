@@ -63,7 +63,7 @@ void Compiler::readStmt(){
    if(token != ";") {
       processError("\";\" expected after \"read(...)\"");
    }
-   emitReadCode(csv);
+   code("read", csv);
 }
 
 void Compiler::writeStmt(){
@@ -83,7 +83,8 @@ void Compiler::writeStmt(){
    if(token != ";") {
       processError("\";\" expected after \"write(...)\"");
    }
-   emitWriteCode(csv);
+   //emitWriteCode(csv);
+   code("write", csv);
 
 }
 

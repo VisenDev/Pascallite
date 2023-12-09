@@ -118,13 +118,36 @@ string Compiler::whichValue(string name) //tells which value a name has
 }
 
 void Compiler::code(string op, string operand1, string operand2) {
-   (void) operand2; //suppress warning
    if (op == "program") {
       emitPrologue(operand1);
    } else if (op == "end") {
       emitEpilogue();
+   }  else if (op == "read") { 
+      emitReadCode(operand1);
+   } else if (op == "write") {
+      emitReadCode(operand1);
+   } else if (op == "+") { // this must be binary '+'
+      emitAdditionCode(operand1, operand2);
+   } else if (op == "-") { // this must be binary '-'
+      emitSubtractionCode(operand1, operand2);
+   } else if (op == "neg") { // this must be unary '-'
+      emitNegationCode(operand1);
+   } else if (op == "not") {
+      emitNotCode(operand1);
+   } else if (op == "*") {
+      emitMultiplicationCode(operand1, operand2);
+   } else if (op == "div") {
+      emitDivisionCode(operand1, operand2);
+   } else if (op == "mod") {
+      emitModuloCode(operand1, operand2);
+   } else if (op == "and") {
+      emitAndCode(operand1, operand2);
+   } else if (op == "=") {
+      emitEqualityCode(operand1, operand2);
+   } else if (op == ":=") {
+      emitAssignCode(operand1, operand2);
    } else {
-      processError("compiler error since function code should not be called with illegal arguments");
+      processError("[code] compiler error since function code should not be called with illegal arguments.\n args: " + operand1 + ", " + operand2);
    }
 }
 
