@@ -35,6 +35,8 @@ void Compiler::assignStmt(){
    if(token != ":=") {
       processError("expected \":=\" after NON_KEY_ID in assignStmt");
    }
+   pushOperator(":=");
+   pushOperand(token);
    nextToken();
    express();
    nextToken();
@@ -85,6 +87,8 @@ void Compiler::writeStmt(){
 
 }
 void Compiler::express(){
+   cout << "[express] " << token << endl;
+   
    if(token != "not"
       and token != "true"
       and token != "false"
@@ -111,6 +115,7 @@ bool isRelOp(string token) {
 }
 
 void Compiler::expresses(){
+   cout << "[expresses] " << token << endl;
    if (isRelOp(token)
    ){
       pushOperator(token);
@@ -135,6 +140,7 @@ bool isAddLevelOp(string token) {
 }
 
 void Compiler::term(){
+    cout << "[term] " << token << endl;
     if(token != "not"
       and token != "true"
       and token != "false"
@@ -146,20 +152,18 @@ void Compiler::term(){
    ){
       processError("[term] expected true, false, (, +, -, INTEGER, or NON_KEY_ID, found \"" + token + "\"");
    }
-    nextToken();
     factor();
-    nextToken();
     terms();
 }
 
 void Compiler::terms(){
+   cout << "[terms] " << token << endl;
    if(isAddLevelOp(token)){
       pushOperator(token);
       nextToken();
       factor();
       code(popOperator(), popOperand(), popOperand());
       nextToken();
-      
       terms();
    } else if (
          token == "<>"
@@ -178,6 +182,7 @@ void Compiler::terms(){
 } 
 
 void Compiler::factor(){
+   cout << "[factor] " << token << endl;
    if(token != "not"
       and token != "true"
       and token != "false"
@@ -187,11 +192,12 @@ void Compiler::factor(){
       and !isInteger(token)
       and !isNonKeyId(token)
    ){
-      processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+      processError("[factor] expected true, false, (, +, -, INTEGER, or NON_KEY_ID, found \"" + token + "\"");
    }
-   
    part();
+   nextToken();
    factors();
+   nextToken();
 }
 
 bool isMultLevelOp(string token) {
@@ -203,6 +209,7 @@ bool isMultLevelOp(string token) {
 }
 
 void Compiler::factors(){
+   cout << "[factors] " << token << endl;
    if(isMultLevelOp(token)){
       pushOperator(token);
       nextToken();
@@ -228,7 +235,13 @@ void Compiler::factors(){
       processError("[factors] expected ADD_LEVEL_OP, REL_OP, \")\", or \";\", found " + token);
    }
 }      
+
 void Compiler::part(){
+   cout << "[part] " << token << endl;
+   
+   //'not' ( '(' EXPRESS ')' code('not',popOperand)  | 
+   //BOOLEANx pushOperand(not x; i.e., 'true' or 'false')  |
+   //NON_KEY_IDx code('not',x) )
    if(token == "not"){
       nextToken();
       
@@ -241,14 +254,16 @@ void Compiler::part(){
             processError("expected \")\" after (...");
          }
          code("not", popOperand());
-         nextToken();
       } else if(isBoolean(token)) {
          pushOperand(token == "true" ? "false" : "true" );
-         nextToken();
       } else if(isNonKeyId(token)) {
          code("not", token);
-         nextToken();
+      } else {
+         processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"+\"");
       }
+
+   //'+' ( '(' EXPRESS ')' |
+   //( INTEGERx | NON_KEY_IDx ) pushOperand(x) ) 
    } else if(token == "+"){
       nextToken();
       if(token == "(") {
@@ -258,15 +273,15 @@ void Compiler::part(){
          if(token != ")") {
             processError("expected \")\" after (...");
          }
-         nextToken();
-      } else if(isBoolean(token) or isNonKeyId(token)) {
+      } else if(isInteger(token) or isNonKeyId(token)) {
          pushOperand(token);
-         nextToken();
       } else {
-         processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"not\"");
+         processError("[part] expected INTEGER or NON_KEY_ID after \"+\", found \"" + token + "\"");
       }  
 
-      //TODO finish implementing the code after this
+   //'-' ( '(' EXPRESS ')' code('neg',popOperand) |
+   //INTEGERx pushOperand('-'+ x) |
+   //NON_KEY_IDx code('neg',x) )
    } else if(token == "-"){
       nextToken();
 
@@ -278,8 +293,15 @@ void Compiler::part(){
             processError("expected \")\" after (...");
          }
          code("neg", popOperand());
-         nextToken();
-      } 
+      } else if (isInteger(token)) {
+         pushOperand("- " + token);
+      } else if (isNonKeyId(token)) {
+         code("neg", token);
+      } else {
+            processError("[part] INTEGER, \"(\", or NON_KEY_ID after \"-\"");
+      }
+
+   //'(' EXPRESS ')'
    } else if (token == "(") {
       nextToken();
       express();
@@ -287,16 +309,12 @@ void Compiler::part(){
       if(token != ")") {
          processError("expected \")\" after (...");
       }
-      nextToken();
    } else if(isInteger(token)){
-      nextToken();
-      //TODO do something
+      pushOperand(token);
    } else if(isBoolean(token)) {
-      nextToken();
-      //TODO do something
+      pushOperand(token);
    } else if(isNonKeyId(token)) {
-      nextToken();
-      //TODO do something
+      pushOperand(token);
    } else {
       processError("[part] expected: not, +, -, (, INTEGER, BOOLEAN, NON_KEY_ID, found\"" + token + "\"");
    }
