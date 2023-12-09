@@ -118,6 +118,8 @@ string Compiler::whichValue(string name) //tells which value a name has
 }
 
 void Compiler::code(string op, string operand1, string operand2) {
+   cout << "    code(" + op + ", " + operand1 + ", " + operand2 + ")" << endl;
+   
    if (op == "program") {
       emitPrologue(operand1);
    } else if (op == "end") {
