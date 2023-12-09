@@ -1,9 +1,9 @@
 CFLAGS= -Wall -Wextra -Wpedantic -std=c++11
-CFILES= stage1main.C *.cpp
+CFILES= stage1main.C
 BIN= stage1
 
 all: ${CFILES}
 	g++  ${CFILES} ${CFLAGS} -o ${BIN}
 
 run: all
-	./${BIN} data1/101.dat out/101.lst out/101.asm
+	./${BIN} data1/102.dat out/102.lst out/102.asm
