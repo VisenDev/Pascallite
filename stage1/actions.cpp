@@ -14,6 +14,10 @@ string Compiler::popOperator() {
 }
 
 void Compiler::pushOperand(string op) {
+	if (isLiteral(op) and (symbolTable.find(op) == symbolTable.end()))
+	{
+		insert(op, whichType(op), CONSTANT, op, YES, 1);
+	}
    operandStk.push(op);
 }
 

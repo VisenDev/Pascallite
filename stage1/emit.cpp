@@ -161,9 +161,9 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
 	   contentsOfAReg = operand2;
    }
 	if (contentsOfAReg == operand2)
-		emit("", "imul", "dword ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+		emit("", "imul", "dword ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" * "+operand1);
 	else if (contentsOfAReg == operand1)
-		emit("", "imul", "dword ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = " + operand1+" + "+operand2);
+		emit("", "imul", "dword ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = " + operand1+" * "+operand2);
 	else
 		cout << "ERROR IN EMIT ADDITION LOGIC" << endl; //remove this at some point
 	
@@ -177,7 +177,22 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
 }
 void Compiler::emitDivisionCode(string operand1, string operand2){}       // op2 /  op1
 void Compiler::emitModuloCode(string operand1, string operand2){}         // op2 %  op1
-void Compiler::emitNegationCode(string operand1, string){}           // -op1
+void Compiler::emitNegationCode(string operand1, string)           // -op1
+{
+	if (symbolTable.find(operand1)->second.getDataType() != INTEGER)
+		processError("illegal argument");
+	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand1))
+	{
+		emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+	}
+	if (contentsOfAReg != operand1)
+	{
+		emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; place "+operand1+" into eax");
+	}
+	emit ("", "neg", "eax", "; AReg = -AReg");
+}
 void Compiler::emitNotCode(string operand1, string){}                // !op1
 void Compiler::emitAndCode(string operand1, string operand2){}            // op2 && op1
 void Compiler::emitOrCode(string operand1, string operand2){}             // op2 || op1
