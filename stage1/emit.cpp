@@ -58,7 +58,7 @@ void Compiler::emitWriteCode(string operand, string)
 		processError("Symbol "+name+" is undefined");
 	if (contentsOfAReg != name)
 	{
-		emit("", "mov", "eax, ["+itr->second.getInternalName()+"]", "; load "+name+" into eax");
+		emit("", "mov", "eax,["+itr->second.getInternalName()+"]", "; load "+name+" in eax");
 		contentsOfAReg = name;
 	}
 	if ((itr->second.getDataType() == INTEGER) or (itr->second.getDataType() == BOOLEAN))
@@ -76,8 +76,8 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
 	if (operand1 == operand2)
 		return;
 	if (operand1 != contentsOfAReg)
-		emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = "+operand1);
-	emit("", "mov", "["+symbolTable.find(operand2)->second.getInternalName()+"], eax", "; operand2 = AReg");
+		emit("", "mov", "eax,["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = "+operand1);
+	emit("", "mov", "["+symbolTable.find(operand2)->second.getInternalName()+"],eax", "; "+operand2+" = AReg");
 	contentsOfAReg = operand2;
 	if (isTemporary(operand1))
 		freeTemp();
@@ -90,19 +90,19 @@ void Compiler::emitAdditionCode(string operand1, string operand2){
       processError("illegal type, expected integer");
    }
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
-      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    } else if (!isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
       contentsOfAReg = "";
    }  if(contentsOfAReg != operand1 and contentsOfAReg != operand2) {
-      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
+      	emit("", "mov", "eax,["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
 	if (contentsOfAReg == operand2)
-		emit("", "add", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+		emit("", "add", "eax,["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
 	else if (contentsOfAReg == operand1)
-		emit("", "add", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = " + operand1+" + "+operand2);
+		emit("", "add", "eax,["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = " + operand1+" + "+operand2);
 	else
 		cout << "ERROR IN EMIT ADDITION LOGIC" << endl; //remove this at some point
 	
@@ -128,11 +128,11 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
    } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       contentsOfAReg = "";
    }  if(contentsOfAReg != operand2) {
-      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
+      	emit("", "mov", "eax,["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
 	if (contentsOfAReg == operand2)
-		emit("", "sub", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+		emit("", "sub", "eax,["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
 	else
 		cout << "LOGIC ERROR IN SUBTRACTION" << endl;  //remove this later
 	if (isTemporary(operand1))
@@ -151,13 +151,13 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
       processError("illegal type, expected integer");
    }
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
-      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       contentsOfAReg = "";
    }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
-      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
 	if (contentsOfAReg == operand2)
@@ -183,13 +183,13 @@ void Compiler::emitNegationCode(string operand1, string)           // -op1
 		processError("illegal argument");
 	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand1))
 	{
-		emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+		emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
 	}
 	if (contentsOfAReg != operand1)
 	{
-		emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; place "+operand1+" into eax");
+		emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; place "+operand1+" in eax");
 	}
 	emit ("", "neg", "eax", "; AReg = -AReg");
 }
@@ -205,7 +205,7 @@ void Compiler::emitEqualityCode(string operand1, string operand2){
    }
 
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
-      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    }
