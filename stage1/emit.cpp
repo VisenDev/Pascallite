@@ -77,7 +77,7 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
 }
 
 void Compiler::emitAdditionCode(string operand1, string operand2){
-   if(symbolTable.find(operand1)->second.getDataType() != INTEGER or symbolTable.find(operand2)->second.getDataType() != INTEGER) {
+   if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
       processError("illegal type, expected integer");
    }
    if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
