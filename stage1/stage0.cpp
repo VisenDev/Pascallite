@@ -499,6 +499,7 @@ void Compiler::processError(string err)
 //=============Lexer==============
 static bool isEnd = 0;
 
+//TODO this function is buggy on parsing stage1 operators, this needs to be fixed
 string Compiler::nextToken() //returns the next token or end of file marker
 {
    token = "";
@@ -517,6 +518,7 @@ string Compiler::nextToken() //returns the next token or end of file marker
       nextChar();
    } else if (isSpecialSymbol(ch)) {
       token = ch;
+      //TODO update this temporary fix
       if ((token == "<" or token == ":" or token == ">") and isSpecialSymbol(sourceFile.peek())) {
          token += nextChar();
       }

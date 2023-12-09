@@ -41,10 +41,6 @@ void Compiler::assignStmt(){
    if(token != ";") {
       processError("expected \";\" after assignStmt");
    }
-   //TODO 
-   //IMPORTANT
-   //FINISH ACTUALLY EMITTING CODE FROM THIS
-   //emitAssignCode(lhs);
    code(popOperator(), popOperand(), popOperand());
 } 
 
@@ -67,6 +63,7 @@ void Compiler::readStmt(){
    }
    emitReadCode(csv);
 }
+
 void Compiler::writeStmt(){
    if(token != "write"){
       processError("\"write\" expected");
@@ -103,17 +100,24 @@ void Compiler::express(){
    expresses();
 }
 
-void Compiler::expresses(){
-   if (token == "<>"
+bool isRelOp(string token) {
+    return (token == "<>"
       or token == "="
       or token == "<="
       or token == "=>"
       or token == "<"
       or token == ">"
+   );
+}
+
+void Compiler::expresses(){
+   if (isRelOp(token)
    ){
-      //TODO relops
-      //should be right called  here before term and expresses
+      pushOperator(token);
+      nextToken();
       term();
+      code(popOperator(), popOperand(), popOperand());
+      nextToken();
       expresses();
    } else if (token == ")" or token == ";") {
       return;
@@ -121,6 +125,15 @@ void Compiler::expresses(){
       processError("[expresses] expected REL_OP, \")\", or \";\", found " + token);
    }
 }
+
+bool isAddLevelOp(string token) {
+   return (
+      token == "or"
+      and token == "+"
+      and token == "-"
+   );
+}
+
 void Compiler::term(){
     if(token != "not"
       and token != "true"
@@ -133,29 +146,39 @@ void Compiler::term(){
    ){
       processError("[term] expected true, false, (, +, -, INTEGER, or NON_KEY_ID, found \"" + token + "\"");
    }
+    nextToken();
     factor();
+    nextToken();
     terms();
 }
+
 void Compiler::terms(){
-   if(token == "-" or token == "+" or token == "or") {
-      //TODO 
-      //add_level_op should be herek
+   if(isAddLevelOp(token)){
+      pushOperator(token);
+      nextToken();
       factor();
+      code(popOperator(), popOperand(), popOperand());
+      nextToken();
+      
       terms();
-   } else if (token == "<>"
+   } else if (
+         token == "<>"
       or token == "="
       or token == "<="
       or token == "=>"
       or token == "<"
       or token == ">"
+      or token == ")"
+      or token == ";"
    ) {
       return;
    } else {
-      processError("expected REL_OP, \")\", or \";\"");
+      processError("[terms] expected REL_OP, \")\", or \";\", found \"" + token + "\"");
    }
 } 
+
 void Compiler::factor(){
-     if(token != "not"
+   if(token != "not"
       and token != "true"
       and token != "false"
       and token != "("
@@ -165,36 +188,41 @@ void Compiler::factor(){
       and !isNonKeyId(token)
    ){
       processError("expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
-     }
-     part();
-     factors();
+   }
    
+   part();
+   factors();
+}
+
+bool isMultLevelOp(string token) {
+   return (token == "*"
+         or token == "div"
+         or token == "mod"
+         or token == "and"
+         );
 }
 
 void Compiler::factors(){
-   if(token == "*"
-      or token == "div"
-      or token == "mod"
-      or token == "and"
-   ){
-      //TODO MULT_LEVEL_OP here
+   if(isMultLevelOp(token)){
+      pushOperator(token);
       nextToken();
-      //replace nextToken() with multi level op parsing
-      
       part();
+      code(popOperator(), popOperand(), popOperand());
+      nextToken();
+
       factors();
    } else if (token == "<>"
-      or token == "="
-      or token == "<="
-      or token == "=>"
-      or token == "<"
-      or token == ">"
-      or token == ")"
-      or token == ";"
-      or token == "+"
-      or token == "-"
-      or token == "or"
-   ) {
+         or token == "="
+         or token == "<="
+         or token == "=>"
+         or token == "<"
+         or token == ">"
+         or token == ")"
+         or token == ";"
+         or token == "+"
+         or token == "-"
+         or token == "or"
+         ) {
       return;
    } else {
       processError("[factors] expected ADD_LEVEL_OP, REL_OP, \")\", or \";\", found " + token);
@@ -203,22 +231,22 @@ void Compiler::factors(){
 void Compiler::part(){
    if(token == "not"){
       nextToken();
+      
       if(token == "(") {
+         
          nextToken();
          express();
          nextToken();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
+         code("not", popOperand());
          nextToken();
       } else if(isBoolean(token)) {
-         //TODO am I supposed to have a code here or something?
-         //or just return
+         pushOperand(token == "true" ? "false" : "true" );
          nextToken();
       } else if(isNonKeyId(token)) {
-
-         //TODO am I supposed to have a code here or something?
-         //or just return
+         code("not", token);
          nextToken();
       }
    } else if(token == "+"){
@@ -231,18 +259,17 @@ void Compiler::part(){
             processError("expected \")\" after (...");
          }
          nextToken();
-      } else if(isBoolean(token)) {
-         //TODO am I supposed to have a code here or something?
-         //or just return
+      } else if(isBoolean(token) or isNonKeyId(token)) {
+         pushOperand(token);
          nextToken();
-      } else if(isNonKeyId(token)) {
+      } else {
+         processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"not\"");
+      }  
 
-         //TODO am I supposed to have a code here or something?
-         //or just return
-         nextToken();
-      }
+      //TODO finish implementing the code after this
    } else if(token == "-"){
       nextToken();
+
       if(token == "(") {
          nextToken();
          express();
@@ -250,17 +277,9 @@ void Compiler::part(){
          if(token != ")") {
             processError("expected \")\" after (...");
          }
+         code("neg", popOperand());
          nextToken();
-      } else if(isBoolean(token)) {
-         //TODO am I supposed to have a code here or something?
-         //or just return
-         nextToken();
-      } else if(isNonKeyId(token)) {
-
-         //TODO am I supposed to have a code here or something?
-         //or just return
-         nextToken();
-      }
+      } 
    } else if (token == "(") {
       nextToken();
       express();
