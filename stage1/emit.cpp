@@ -185,10 +185,14 @@ void Compiler::emitOrCode(string operand1, string operand2){}             // op2
 void Compiler::emitEqualityCode(string operand1, string operand2){
 	if (!EXISTS(operand1) or !EXISTS(operand2)){
 		processError("undefined operands");
-
-      //TODO check if these actually need to be integer
-   } else if(DATATYPE(operand1) != INTEGER or (DATATYPE(operand2) != INTEGER)) {
+   } else if(DATATYPE(operand1) != INTEGER or (DATATYPE(operand2) != INTEGER)) { //TODO do these need to be integer
 		processError("operands to = much be INTEGER");
+   }
+
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    }
    
 }       // op2 == op1
