@@ -77,7 +77,7 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
 }
 
 void Compiler::emitAdditionCode(string operand1, string operand2){
-   if(!isInteger(operand1) or !isInteger(operand2)) {
+   if(symbolTable.find(operand1)->second.getDataType() != INTEGER or symbolTable.find(operand2)->second.getDataType() != INTEGER) {
       processError("illegal type, expected integer");
    }
    if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
@@ -110,22 +110,27 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
    if(!isInteger(operand1) or !isInteger(operand2)) {
       processError("illegal type, expected integer");
    }
-   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
-      // emit code to store that contentsOfAReg into memory
-      // change the allocate entry for the temp in the symbol table to yes
-      // deassign it
-   } else if (isTemporary(contentsOfAReg)) {
-      // if the A register holds a non-temp not operand1 nor operand2 then deassign it
+   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand2) {
+      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and contentsOfAReg != operand2) {
       contentsOfAReg = "";
-   } else if(contentsOfAReg != operand1 and contentsOfAReg != operand2) {
-      // emit code to load operand2 into the A register
-      // emit code to perform register-memory subtraction 
+   }  if(contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
+	   contentsOfAReg = operand2;
    }
-   //TODO
-   // deassign all temporaries involved in the subtraction and free those names for reuse
-   // A Register = next available temporary name an
-
-
+	if (contentsOfAReg == operand2)
+		emit("", "sub", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+	else
+		cout << "LOGIC ERROR IN SUBTRACTION" << endl;  //remove this later
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
 }    // op2 -  op1
 void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *  op1
 {
