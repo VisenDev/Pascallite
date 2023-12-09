@@ -77,10 +77,12 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
 }
 
 void Compiler::emitAdditionCode(string operand1, string operand2){
+	if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
+		processError("undefined operands");
    if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
       processError("illegal type, expected integer");
    }
-   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
@@ -107,14 +109,16 @@ void Compiler::emitAdditionCode(string operand1, string operand2){
 }       // op2 +  op1
 
 void Compiler::emitSubtractionCode(string operand1, string operand2){
-   if(!isInteger(operand1) or !isInteger(operand2)) {
+	if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
+		processError("undefined operands");
+   if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
       processError("illegal type, expected integer");
    }
-   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand2) {
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
-   } else if (!isTemporary(contentsOfAReg) and contentsOfAReg != operand2) {
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       contentsOfAReg = "";
    }  if(contentsOfAReg != operand2) {
       	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
@@ -134,16 +138,18 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
 }    // op2 -  op1
 void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *  op1
 {
-	if(!isInteger(operand1) or !isInteger(operand2)) {
+	if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
+		processError("undefined operands");
+	if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
       processError("illegal type, expected integer");
    }
-   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
-   } else if (!isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       contentsOfAReg = "";
-   }  if(contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+   }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
 	   contentsOfAReg = operand2;
    }
