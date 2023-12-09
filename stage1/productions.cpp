@@ -86,8 +86,10 @@ void Compiler::writeStmt(){
    emitWriteCode(csv);
 
 }
+
+
 void Compiler::express(){
-   cout << "[express] " << token << endl;
+   cout << "[express  ]   " << token << endl;
    
    if(token != "not"
       and token != "true"
@@ -115,14 +117,16 @@ bool isRelOp(string token) {
 }
 
 void Compiler::expresses(){
-   cout << "[expresses] " << token << endl;
+   cout << "[expresses]   " << token << endl;
    if (isRelOp(token)
    ){
       pushOperator(token);
       nextToken();
+      cout << "           " << token << endl;
       term();
       code(popOperator(), popOperand(), popOperand());
       nextToken();
+      cout << "           " << token << endl;
       expresses();
    } else if (token == ")" or token == ";") {
       return;
@@ -140,7 +144,7 @@ bool isAddLevelOp(string token) {
 }
 
 void Compiler::term(){
-    cout << "[term] " << token << endl;
+    cout << "[term     ]   " << token << endl;
     if(token != "not"
       and token != "true"
       and token != "false"
@@ -157,13 +161,13 @@ void Compiler::term(){
 }
 
 void Compiler::terms(){
-   cout << "[terms] " << token << endl;
+   cout << "[terms    ]   " << token << endl;
    if(isAddLevelOp(token)){
       pushOperator(token);
       nextToken();
+      cout << "           " << token << endl;
       factor();
       code(popOperator(), popOperand(), popOperand());
-      nextToken();
       terms();
    } else if (
          token == "<>"
@@ -182,7 +186,7 @@ void Compiler::terms(){
 } 
 
 void Compiler::factor(){
-   cout << "[factor] " << token << endl;
+   cout << "[factor   ]   " << token << endl;
    if(token != "not"
       and token != "true"
       and token != "false"
@@ -195,9 +199,7 @@ void Compiler::factor(){
       processError("[factor] expected true, false, (, +, -, INTEGER, or NON_KEY_ID, found \"" + token + "\"");
    }
    part();
-   nextToken();
    factors();
-   nextToken();
 }
 
 bool isMultLevelOp(string token) {
@@ -209,14 +211,13 @@ bool isMultLevelOp(string token) {
 }
 
 void Compiler::factors(){
-   cout << "[factors] " << token << endl;
+   cout << "[factors  ]   " << token << endl;
    if(isMultLevelOp(token)){
       pushOperator(token);
       nextToken();
+      cout << "              " << token << endl;
       part();
       code(popOperator(), popOperand(), popOperand());
-      nextToken();
-
       factors();
    } else if (token == "<>"
          or token == "="
@@ -237,7 +238,7 @@ void Compiler::factors(){
 }      
 
 void Compiler::part(){
-   cout << "[part] " << token << endl;
+   cout << "[part     ]   " << token << endl;
    
    //'not' ( '(' EXPRESS ')' code('not',popOperand)  | 
    //BOOLEANx pushOperand(not x; i.e., 'true' or 'false')  |
@@ -305,7 +306,6 @@ void Compiler::part(){
    } else if (token == "(") {
       nextToken();
       express();
-      nextToken();
       if(token != ")") {
          processError("expected \")\" after (...");
       }
@@ -318,4 +318,8 @@ void Compiler::part(){
    } else {
       processError("[part] expected: not, +, -, (, INTEGER, BOOLEAN, NON_KEY_ID, found\"" + token + "\"");
    }
+
+   //get the next token
+   nextToken();
+   cout << "              " << token << endl;
 }
