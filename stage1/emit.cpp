@@ -122,7 +122,7 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
       processError("illegal type, expected integer");
    }
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
-      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
@@ -132,7 +132,7 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
 	   contentsOfAReg = operand2;
    }
 	if (contentsOfAReg == operand2)
-		emit("", "sub", "eax,["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+		emit("", "sub", "eax,["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" - "+operand1);
 	else
 		cout << "LOGIC ERROR IN SUBTRACTION" << endl;  //remove this later
 	if (isTemporary(operand1))
@@ -175,10 +175,81 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
 	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
 	pushOperand(contentsOfAReg);
 }
-void Compiler::emitDivisionCode(string operand1, string operand2){}       // op2 /  op1
-void Compiler::emitModuloCode(string operand1, string operand2){}         // op2 %  op1
+void Compiler::emitDivisionCode(string operand1, string operand2)      // op2 /  op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("underfined arguments");
+	if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
+		processError("illegal types, needs integer arguments");
+	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
+	{
+		emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+	}
+	else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
+	{
+		contentsOfAReg = "";
+	}
+	if (contentsOfAReg != operand2)
+	{
+		emit("", "mov", "eax,["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+	}
+	if (contentsOfAReg == operand2)
+	{
+		emit("", "cdq", "", "; sign extend dividend from eax to edx:eax");
+		emit("", "idiv", "dword ["+NAME(operand1)+"]", "; AReg = " +operand2+" div "+operand1);
+	}
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);	
+}
+void Compiler::emitModuloCode(string operand1, string operand2)         // op2 %  op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("underfined arguments");
+	if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
+		processError("illegal types, needs integer arguments");
+	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
+	{
+		emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+	}
+	else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
+	{
+		contentsOfAReg = "";
+	}
+	if (contentsOfAReg != operand2)
+	{
+		emit("", "mov", "eax,["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+	}
+	if (contentsOfAReg == operand2)
+	{
+		emit("", "cdq", "", "; sign extend dividend from eax to edx:eax");
+		emit("", "idiv", "dword ["+NAME(operand1)+"]", "; AReg = " +operand2+" div "+operand1);
+		emit("", "xchg", "eax,edx", "; exchange quotient and remainder");
+	}
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
 void Compiler::emitNegationCode(string operand1, string)           // -op1
 {
+	if (!EXISTS(operand1))
+		processError("undefined arguments");
 	if (symbolTable.find(operand1)->second.getDataType() != INTEGER)
 		processError("illegal argument");
 	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand1))
@@ -192,24 +263,97 @@ void Compiler::emitNegationCode(string operand1, string)           // -op1
 		emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; place "+operand1+" in eax");
 	}
 	emit ("", "neg", "eax", "; AReg = -AReg");
+	if (isTemporary(operand1))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
 }
 void Compiler::emitNotCode(string operand1, string){}                // !op1
-void Compiler::emitAndCode(string operand1, string operand2){}            // op2 && op1
-void Compiler::emitOrCode(string operand1, string operand2){}             // op2 || op1
-                                                                          
-void Compiler::emitEqualityCode(string operand1, string operand2){
-	if (!EXISTS(operand1) or !EXISTS(operand2)){
+void Compiler::emitAndCode(string operand1, string operand2)            // op2 && op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
 		processError("undefined operands");
-   } else if(DATATYPE(operand1) != INTEGER or (DATATYPE(operand2) != INTEGER)) { //TODO do these need to be integer
-		processError("operands to = much be INTEGER");
-   }
-
-   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+	if ((DATATYPE(operand1) != BOOLEAN) or (DATATYPE(operand2) != BOOLEAN))
+      processError("illegal type, expected boolean");
+   
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
    }
-   //TODO robert finish this function
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
+void Compiler::emitOrCode(string operand1, string operand2)            // op2 || op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if ((DATATYPE(operand1) != BOOLEAN) or (DATATYPE(operand2) != BOOLEAN))
+      processError("illegal type, expected boolean");
+  
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
+                                                                          
+void Compiler::emitEqualityCode(string operand1, string operand2)
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if ( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN)))
+      processError("illegal type, expected both boolean or both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
   
    
 //   void emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
@@ -234,9 +378,34 @@ void Compiler::emitEqualityCode(string operand1, string operand2){
 //  deassign all temporaries involved and free those names for reuse
 //  A Register = next available temporary name and change type of its symbol table entry to boolean
 //} p
-   
-}       // op2 == op1
-void Compiler::emitInequalityCode(string operand1, string operand2){}     // op2 != op1
+         // op2 == op1
+void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 != op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if ( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN)))
+      processError("illegal type, expected both boolean or both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if((contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
 void Compiler::emitLessThanCode(string operand1, string operand2){}       // op2 <  op1
 void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2){} // op2 <= op1
 void Compiler::emitGreaterThanCode(string operand1, string operand2){}    // op2 >  op1
