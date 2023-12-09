@@ -24,6 +24,8 @@ void Compiler::emitReadCode(string operand, string)
 		processError("Symbol "+name+" is undefined");
 	if (itr->second.getDataType() != INTEGER)
 		processError("can't read variables of this type");
+	if (itr->second.getMode() != VARIABLE)
+		processError("attempting to read to a read-only location");
 	   
 	emit("", "call", "ReadInt", "; read int; value placed in eax");
 	emit("", "mov", "["+itr->second.getInternalName()+"],eax", "; store eax at "+name);
@@ -47,11 +49,13 @@ void Compiler::emitWriteCode(string operand, string)
 	auto itr = symbolTable.find(name);
 	if (itr == symbolTable.end())
 		processError("Symbol "+name+" is undefined");
-	if ((itr->second.getDataType() != INTEGER) && (itr->second.getDataType() != BOOLEAN))
-		processError("can't write variables of this type");
-	
-	emit("", "mov", "eax, ["+itr->second.getInternalName()+"]", "; load "+name+" into eax");
-	emit("", "call", "WriteInt",  "; write int in eax to standard out");
+	if (contentsOfAReg != name)
+	{
+		emit("", "mov", "eax, ["+itr->second.getInternalName()+"]", "; load "+name+" into eax");
+		contentsOfAReg = name;
+	}
+	if ((itr->second.getDataType() == INTEGER) or (itr->second.getDataType() == BOOLEAN))
+		emit("", "call", "WriteInt",  "; write int in eax to standard out");
 	emit("", "call", "Crlf", "; write \\r\\n to standard out");
    }
 }
@@ -123,7 +127,36 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
 
 
 }    // op2 -  op1
-void Compiler::emitMultiplicationCode(string operand1, string operand2){} // op2 *  op1
+void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *  op1
+{
+	if(!isInteger(operand1) or !isInteger(operand2)) {
+      processError("illegal type, expected integer");
+   }
+   if(isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+      emit("", "mov", "["+contentsOfAReg+"], eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+      contentsOfAReg = "";
+   }  if(contentsOfAReg != operand1 and contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; put "+operand2+" into eax");
+	   contentsOfAReg = operand2;
+   }
+	if (contentsOfAReg == operand2)
+		emit("", "imul", "dword ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = " + operand2+" + "+operand1);
+	else if (contentsOfAReg == operand1)
+		emit("", "imul", "dword ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = " + operand1+" + "+operand2);
+	else
+		cout << "ERROR IN EMIT ADDITION LOGIC" << endl; //remove this at some point
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
 void Compiler::emitDivisionCode(string operand1, string operand2){}       // op2 /  op1
 void Compiler::emitModuloCode(string operand1, string operand2){}         // op2 %  op1
 void Compiler::emitNegationCode(string operand1, string){}           // -op1
