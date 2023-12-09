@@ -209,6 +209,31 @@ void Compiler::emitEqualityCode(string operand1, string operand2){
 	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
 	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
    }
+   //TODO robert finish this function
+  
+   
+//   void emitEqualityCode(string operand1,string operand2) //test whether operand2 equals operand1
+//{ if types of operands are not the same
+//    processError(incompatible types)
+//  if the A Register holds a temp not operand1 nor operand2 then
+//     emit code to store that temp into memory
+//     change the allocate entry for it in the symbol table to yes
+//     deassign it
+//  if the A register holds a non-temp not operand2 nor operand1 then deassign it
+//  if neither operand is in the A register then
+//    emit code to load operand2 into the A register
+//  emit code to perform a register-memory compare
+//  emit code to jump if equal to the next available Ln (call getLabel)
+//  emit code to load FALSE into the A register
+//  insert FALSE in symbol table with value 0 and external name false
+//  emit code to perform an unconditional jump to the next label (call getLabel should be L(n+1))
+//  emit code to label the next instruction with the first acquired label Ln
+//  emit code to load TRUE into A register
+//  insert TRUE in symbol table with value -1 and external name true
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
+//} p
    
 }       // op2 == op1
 void Compiler::emitInequalityCode(string operand1, string operand2){}     // op2 != op1
