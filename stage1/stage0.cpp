@@ -127,7 +127,7 @@ void Compiler::code(string op, string operand1, string operand2) {
    }  else if (op == "read") { 
       emitReadCode(operand1);
    } else if (op == "write") {
-      emitReadCode(operand1);
+      emitWriteCode(operand1);
    } else if (op == "+") { // this must be binary '+'
       emitAdditionCode(operand1, operand2);
    } else if (op == "-") { // this must be binary '-'
