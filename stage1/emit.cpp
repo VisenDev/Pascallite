@@ -186,7 +186,7 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
 void Compiler::emitDivisionCode(string operand1, string operand2)      // op2 /  op1
 {
 	if (!EXISTS(operand1) or !EXISTS(operand2))
-		processError("underfined arguments");
+		processError("undefined arguments");
 	if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
 		processError("illegal types, needs integer arguments");
 	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
@@ -221,7 +221,7 @@ void Compiler::emitDivisionCode(string operand1, string operand2)      // op2 / 
 void Compiler::emitModuloCode(string operand1, string operand2)         // op2 %  op1
 {
 	if (!EXISTS(operand1) or !EXISTS(operand2))
-		processError("underfined arguments");
+		processError("undefined arguments");
 	if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
 		processError("illegal types, needs integer arguments");
 	if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
@@ -304,7 +304,7 @@ void Compiler::emitNotCode(string operand1, string)                // !op1
 	if (isTemporary(operand1))
 		freeTemp();
 	contentsOfAReg = getTemp();
-	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
 	pushOperand(contentsOfAReg);
 }
 void Compiler::emitAndCode(string operand1, string operand2)            // op2 && op1
@@ -334,7 +334,7 @@ void Compiler::emitAndCode(string operand1, string operand2)            // op2 &
 	if (isTemporary(operand2))
 		freeTemp();
 	contentsOfAReg = getTemp();
-	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
 	pushOperand(contentsOfAReg);
 }
 void Compiler::emitOrCode(string operand1, string operand2)            // op2 || op1
@@ -364,7 +364,7 @@ void Compiler::emitOrCode(string operand1, string operand2)            // op2 ||
 	if (isTemporary(operand2))
 		freeTemp();
 	contentsOfAReg = getTemp();
-	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
 	pushOperand(contentsOfAReg);
 }
                                                                           
@@ -372,7 +372,7 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
 {
 	if (!EXISTS(operand1) or !EXISTS(operand2))
 		processError("undefined operands");
-	if ( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN)))
+	if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN))))
       processError("illegal type, expected both boolean or both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -386,21 +386,27 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
    }
    
    //compare register to memory
-   emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; AReg = "+operand2);
+	if (contentsOfAReg == operand1)
+   		emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; compare "+operand1+" to "+operand2);
+	else if(contentsOfAReg == operand2)
+   		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	else
+		processError("compiler error: error in equality logic");
+	
    const auto label_equal = getLabel(); 
-   emit("", "je", label_equal, "; je to " + label_equal);
+   emit("", "je", label_equal, "; if "+operand2+" = "+operand1+" then jump to set eax to TRUE");
    
-   emit("", "mov", "eax, [FALSE]", "; Areg = FALSE");
+   emit("", "mov", "eax, [FALSE]", "; else set eax to FALSE");
    if(!EXISTS("FALSE")) {
       cout << "inserting false inside equality code" << endl;
       symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
    }
    
    const auto label_false = getLabel();
-   emit("", "jmp", label_equal, "; jmp to " + label_false);
-   emit(label_equal, "", "", "; " + label_equal);
+   emit("", "jmp", label_false, "unconditionally jump");
+   emit(label_equal, "", "", "");
    
-   emit("", "mov", "eax, [TRUE]", "; Areg = TRUE");
+   emit("", "mov", "eax, [TRUE]", "; set eax to TRUE");
    if(!EXISTS("TRUE")){
       cout << "inserting true inside equality code" << endl;
       symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
@@ -408,7 +414,7 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    
-   emit(label_false, "", "", "; " + label_false);
+   emit(label_false, "", "", "");
    
 //  emit code to label the next instruction with the second acquired label L(n+1)
 //  deassign all temporaries involved and free those names for reuse
@@ -421,7 +427,7 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
 	if (isTemporary(operand2))
 		freeTemp();
 	contentsOfAReg = getTemp();
-	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
 	pushOperand(contentsOfAReg);
 }
   
@@ -453,7 +459,7 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
 {
 	if (!EXISTS(operand1) or !EXISTS(operand2))
 		processError("undefined operands");
-	if ( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN)))
+	if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN))))
       processError("illegal type, expected both boolean or both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -467,7 +473,11 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
    }
 	
 	//insert function logic here
-   emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; AReg = "+operand2);
+	if (contentsOfAReg == operand1)
+   		emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; compare "+operand1+" to "+operand2);
+	else if(contentsOfAReg == operand2)
+		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	
    const auto label_equal = getLabel(); 
    emit("", "jne", label_equal, "; je to " + label_equal);
    
@@ -479,7 +489,7 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
    
    const auto label_false = getLabel();
    emit("", "jmp", label_equal, "; jmp to " + label_false);
-   emit(label_equal, "", "", "; " + label_equal);
+   emit(label_equal, "", "", "");
    
    emit("", "mov", "eax, [TRUE]", "; Areg = TRUE");
    if(!EXISTS("true")){
@@ -487,7 +497,7 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
       symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
    }
    
-   emit(label_false, "", "", "; " + label_false);
+   emit(label_false, "", "", "");
  
 	
 	if (isTemporary(operand1))
@@ -495,10 +505,246 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
 	if (isTemporary(operand2))
 		freeTemp();
 	contentsOfAReg = getTemp();
-	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
 	pushOperand(contentsOfAReg);
 }
-void Compiler::emitLessThanCode(string operand1, string operand2){}       // op2 <  op1
-void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2){} // op2 <= op1
-void Compiler::emitGreaterThanCode(string operand1, string operand2){}    // op2 >  op1
-void Compiler::emitGreaterThanOrEqualToCode(string operand1, string operand2){} // op2 >= op1
+void Compiler::emitLessThanCode(string operand1, string operand2)       // op2 <  op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
+      processError("illegal type, expected both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if(contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+   
+   //compare register to memory
+	else if(contentsOfAReg == operand2)
+   		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	else
+		processError("compiler error: error in less than logic");
+	
+   const auto label_equal = getLabel(); 
+   emit("", "jl", label_equal, "; if "+operand2+" < "+operand1+" then jump to set eax to TRUE");
+   
+   emit("", "mov", "eax, [FALSE]", "; else set eax to FALSE");
+   if(!EXISTS("FALSE")) {
+      cout << "inserting false inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_false, "unconditionally jump");
+   emit(label_equal, "", "", "");
+   
+   emit("", "mov", "eax, [TRUE]", "; set eax to TRUE");
+   if(!EXISTS("TRUE")){
+      cout << "inserting true inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+            //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
+   
+   emit(label_false, "", "", "");
+   
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
+	pushOperand(contentsOfAReg);
+}
+void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2) // op2 <= op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
+      processError("illegal type, expected both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if(contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+   
+   //compare register to memory
+	else if(contentsOfAReg == operand2)
+   		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	else
+		processError("compiler error: error in less than logic");
+	
+   const auto label_equal = getLabel(); 
+   emit("", "jle", label_equal, "; if "+operand2+" <= "+operand1+" then jump to set eax to TRUE");
+   
+   emit("", "mov", "eax, [FALSE]", "; else set eax to FALSE");
+   if(!EXISTS("FALSE")) {
+      cout << "inserting false inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_false, "unconditionally jump");
+   emit(label_equal, "", "", "");
+   
+   emit("", "mov", "eax, [TRUE]", "; set eax to TRUE");
+   if(!EXISTS("TRUE")){
+      cout << "inserting true inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+            //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
+   
+   emit(label_false, "", "", "");
+   
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
+	pushOperand(contentsOfAReg);
+}
+void Compiler::emitGreaterThanCode(string operand1, string operand2)    // op2 >  op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
+      processError("illegal type, expected both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if(contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+   
+   //compare register to memory
+	if(contentsOfAReg == operand2)
+   		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	else
+		processError("compiler error: error in less than logic");
+	
+   const auto label_equal = getLabel(); 
+   emit("", "jg", label_equal, "; if "+operand2+" > "+operand1+" then jump to set eax to TRUE");
+   
+   emit("", "mov", "eax, [FALSE]", "; else set eax to FALSE");
+   if(!EXISTS("FALSE")) {
+      cout << "inserting false inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_false, "unconditionally jump");
+   emit(label_equal, "", "", "");
+   
+   emit("", "mov", "eax, [TRUE]", "; set eax to TRUE");
+   if(!EXISTS("TRUE")){
+      cout << "inserting true inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+            //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
+   
+   emit(label_false, "", "", "");
+   
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
+	pushOperand(contentsOfAReg);
+}
+void Compiler::emitGreaterThanOrEqualToCode(string operand1, string operand2) // op2 >= op1
+{
+	if (!EXISTS(operand1) or !EXISTS(operand2))
+		processError("undefined operands");
+	if (!(((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
+      processError("illegal type, expected both integer");
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
+      contentsOfAReg = "";
+   }  if(contentsOfAReg != operand2) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand2;
+   }
+   
+   //compare register to memory
+	else if(contentsOfAReg == operand2)
+   		emit("", "cmp", "eax, ["+NAME(operand1)+"]", "; compare "+operand2+" to "+operand1);
+	else
+		processError("compiler error: error in less than logic");
+	
+   const auto label_equal = getLabel(); 
+   emit("", "jge", label_equal, "; if "+operand2+" >= "+operand1+" then jump to set eax to TRUE");
+   
+   emit("", "mov", "eax, [FALSE]", "; else set eax to FALSE");
+   if(!EXISTS("FALSE")) {
+      cout << "inserting false inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_false, "unconditionally jump");
+   emit(label_equal, "", "", "");
+   
+   emit("", "mov", "eax, [TRUE]", "; set eax to TRUE");
+   if(!EXISTS("TRUE")){
+      cout << "inserting true inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+            //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
+   
+   emit(label_false, "", "", "");
+   
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
+	
+	//insert function logic here
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(BOOLEAN);
+	pushOperand(contentsOfAReg);
+}

@@ -149,6 +149,18 @@ void Compiler::code(string op, string operand1, string operand2) {
       emitEqualityCode(operand1, operand2);
    } else if (op == ":=") {
       emitAssignCode(operand1, operand2);
+   } else if (op == "or") {
+      emitOrCode(operand1, operand2);
+   } else if (op == "<>") {
+      emitInequalityCode(operand1, operand2);
+   } else if (op == "<") {
+      emitLessThanCode(operand1, operand2);
+   } else if (op == "<=") {
+      emitLessThanOrEqualToCode(operand1, operand2);
+   } else if (op == ">") {
+      emitGreaterThanCode(operand1, operand2);
+   } else if (op == ">=") {
+      emitGreaterThanOrEqualToCode(operand1, operand2);
    } else {
       processError("[code] compiler error since function code should not be called with illegal arguments.\n args: " + operand1 + ", " + operand2);
    }
@@ -446,8 +458,19 @@ bool Compiler::isNonKeyId(string s) const {
 }
 
 bool Compiler::isInteger(string s) const {
-   return std::find_if(s.begin(), 
+   /*return std::find_if(s.begin(), 
          s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end(); 
+	*/
+	
+	if (!(isdigit(s[0]) or (s[0] == '+') or (s[0] =='-')))
+		return 0;
+	for (uint i = 1; i < s.size(); ++i)
+	{
+		if (!isdigit(s[i]))
+			return 0;
+	}
+	
+	return 1;
 }
 bool Compiler::isBoolean(string s) const {
    return s == "true" || s == "false";
@@ -548,6 +571,12 @@ string Compiler::nextToken() //returns the next token or end of file marker
       if ((token == "<" or token == ":" or token == ">") and isSpecialSymbol(sourceFile.peek())) {
          token += nextChar();
       }
+	  if (token == "-")
+	  {
+		  while (isdigit(sourceFile.peek()))
+			  token += nextChar();
+	  }
+		  
       nextChar();
    } else if(islower(ch)){ 
       token = ch;
