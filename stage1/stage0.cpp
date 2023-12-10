@@ -464,6 +464,8 @@ bool Compiler::isInteger(string s) const {
 	
 	if (!(isdigit(s[0]) or (s[0] == '+') or (s[0] =='-')))
 		return 0;
+	if ((s.size() == 1) and ((s[0] == '+') or (s[0] == '-')))
+		return 0;
 	for (uint i = 1; i < s.size(); ++i)
 	{
 		if (!isdigit(s[i]))

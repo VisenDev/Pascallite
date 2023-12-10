@@ -313,7 +313,7 @@ void Compiler::emitAndCode(string operand1, string operand2)            // op2 &
 	if (!EXISTS(operand1) or !EXISTS(operand2))
 		processError("undefined operands");
 	if ((DATATYPE(operand1) != BOOLEAN) or (DATATYPE(operand2) != BOOLEAN))
-      processError("illegal type, expected boolean");
+      processError("binary \'and\' requires boolean operands");
    
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -398,20 +398,12 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
    emit("", "je", label_equal, "; if "+operand2+" = "+operand1+" then jump to set eax to TRUE");
    
    emit("", "mov", "eax,[FALSE]", "; else set eax to FALSE");
-   if(!EXISTS("FALSE")) {
-      cout << "inserting false inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_false, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; set eax to TRUE");
-   if(!EXISTS("TRUE")){
-      cout << "inserting true inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    
@@ -483,20 +475,12 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
    emit("", "jne", label_equal, "; je to " + label_equal);
    
    emit("", "mov", "eax,[FALSE]", "; Areg = FALSE");
-   if(!EXISTS("false")) {
-      cout << "inserting false into symbol table " << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_equal, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; Areg = TRUE");
-   if(!EXISTS("true")){
-      cout << "inserting true into symbol table " << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
    emit(label_false+":", "", "", "");
  
@@ -536,20 +520,12 @@ void Compiler::emitLessThanCode(string operand1, string operand2)       // op2 <
    emit("", "jl", label_equal, "; if "+operand2+" < "+operand1+" then jump to set eax to TRUE");
    
    emit("", "mov", "eax,[FALSE]", "; else set eax to FALSE");
-   if(!EXISTS("FALSE")) {
-      cout << "inserting false inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_false, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; set eax to TRUE");
-   if(!EXISTS("TRUE")){
-      cout << "inserting true inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    
@@ -596,20 +572,12 @@ void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2) // op
    emit("", "jle", label_equal, "; if "+operand2+" <= "+operand1+" then jump to set eax to TRUE");
    
    emit("", "mov", "eax,[FALSE]", "; else set eax to FALSE");
-   if(!EXISTS("FALSE")) {
-      cout << "inserting false inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_false, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; set eax to TRUE");
-   if(!EXISTS("TRUE")){
-      cout << "inserting true inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    
@@ -656,20 +624,12 @@ void Compiler::emitGreaterThanCode(string operand1, string operand2)    // op2 >
    emit("", "jg", label_equal, "; if "+operand2+" > "+operand1+" then jump to set eax to TRUE");
    
    emit("", "mov", "eax,[FALSE]", "; else set eax to FALSE");
-   if(!EXISTS("FALSE")) {
-      cout << "inserting false inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_false, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; set eax to TRUE");
-   if(!EXISTS("TRUE")){
-      cout << "inserting true inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    
@@ -716,20 +676,12 @@ void Compiler::emitGreaterThanOrEqualToCode(string operand1, string operand2) //
    emit("", "jge", label_equal, "; if "+operand2+" >= "+operand1+" then jump to set eax to TRUE");
    
    emit("", "mov", "eax,[FALSE]", "; else set eax to FALSE");
-   if(!EXISTS("FALSE")) {
-      cout << "inserting false inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
-   }
    
    const auto label_false = getLabel();
    emit("", "jmp", label_false, "; unconditionally jump");
    emit(label_equal+":", "", "", "");
    
    emit("", "mov", "eax,[TRUE]", "; set eax to TRUE");
-   if(!EXISTS("TRUE")){
-      cout << "inserting true inside equality code" << endl;
-      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
-   }
    
             //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
    

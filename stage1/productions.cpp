@@ -119,7 +119,7 @@ bool isRelOp(string token) {
    return (token == "<>"
          or token == "="
          or token == "<="
-         or token == "=>"
+         or token == ">="
          or token == "<"
          or token == ">"
          );
@@ -191,7 +191,7 @@ void Compiler::terms(){
          token == "<>"
          or token == "="
          or token == "<="
-         or token == "=>"
+         or token == ">="
          or token == "<"
          or token == ">"
          or token == ")"
@@ -247,7 +247,7 @@ void Compiler::factors(){
    } else if (token == "<>"
          or token == "="
          or token == "<="
-         or token == "=>"
+         or token == ">="
          or token == "<"
          or token == ">"
          or token == ")"
@@ -258,7 +258,7 @@ void Compiler::factors(){
          ) {
       return;
    } else {
-      processError("[factors] expected ADD_LEVEL_OP, REL_OP, \")\", or \";\", found " + token);
+      processError("[factors] expected ADD_LEVEL_OP, MULT_LEVEL_OP, REL_OP, \")\", or \";\", found " + token);
    }
 }      
 
@@ -307,7 +307,7 @@ void Compiler::part(){
       } else if(isInteger(token) or isNonKeyId(token)) {
          pushOperand(token);
       } else {
-         processError("[part] expected INTEGER or NON_KEY_ID after \"+\", found \"" + token + "\"");
+         processError("[part] expected '(', INTEGER, or NON_KEY_ID after \"+\", found \"" + token + "\"");
       }  
 
       //'-' ( '(' EXPRESS ')' code('neg',popOperand) |
