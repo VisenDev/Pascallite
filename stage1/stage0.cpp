@@ -121,14 +121,26 @@ string Compiler::whichValue(string name) //tells which value a name has
 void Compiler::code(string op, string operand1, string operand2) {
    //cout << "    code(" + op + ", " + operand1 + ", " + operand2 + ")" << endl;
    
-   if (op == "program") {
+   
+     if (op == "read") { 
+      emitReadCode(operand1);
+ 	  return;
+   } else if (op == "write") {
+      emitWriteCode(operand1);
+	  return;
+	 }
+	
+	if(operand1.length() > 15){
+         operand1 = operand1.substr(0, 15);
+      }
+	if(operand2.length() > 15){
+         operand2 = operand2.substr(0, 15);
+      }
+	
+	if (op == "program") {
       emitPrologue(operand1);
    } else if (op == "end") {
       emitEpilogue();
-   }  else if (op == "read") { 
-      emitReadCode(operand1);
-   } else if (op == "write") {
-      emitWriteCode(operand1);
    } else if (op == "+") { // this must be binary '+'
       emitAdditionCode(operand1, operand2);
    } else if (op == "-") { // this must be binary '-'
