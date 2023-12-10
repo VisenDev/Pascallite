@@ -15,7 +15,7 @@ string Compiler::popOperator() {
 
 void Compiler::pushOperand(string op) {
 	if (isInteger(op) and (symbolTable.find(op) == symbolTable.end())) {
-      cout << "inserting " << op << " in pushOperand" << endl;
+      //cout << "inserting " << op << " in pushOperand" << endl;
 		insert(op, whichType(op), CONSTANT, op, YES, 1);
 	}
 	if (isBoolean(op) and (symbolTable.find(op) == symbolTable.end()))

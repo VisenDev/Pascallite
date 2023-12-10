@@ -27,28 +27,28 @@ void Compiler::execStmt(){
 }
 
 void Compiler::assignStmt(){
-   cout << "[assignSmt]   " << token << endl;
+   //cout << "[assignSmt]   " << token << endl;
    if(!isNonKeyId(token)) {
       processError("expected NON_KEY_ID in assignStmt");
    }
    const auto lhs = token;
    nextToken();
-   cout << "             " << token << endl;
+   //cout << "             " << token << endl;
    if(token != ":=") {
       processError("expected \":=\" after NON_KEY_ID in assignStmt");
    }
    pushOperator(":=");
    pushOperand(lhs);
    nextToken();
-   cout << "              " << token << endl;
+   //cout << "              " << token << endl;
    express();
    //nextToken();
-   cout << "              " << token << endl;
+   //cout << "              " << token << endl;
    if(token != ";") {
       processError("expected \";\" after assignStmt");
    }
    
-   cout << "    assignStmt";
+   //cout << "    assignStmt";
    const auto my_operator = popOperator();
    const auto operand1 = popOperand();
    const auto operand2 = popOperand();
@@ -98,7 +98,7 @@ void Compiler::writeStmt(){
 
 
 void Compiler::express(){
-   cout << "[express  ]   " << token << endl;
+   //cout << "[express  ]   " << token << endl;
 
    if(token != "not"
          and token != "true"
@@ -126,12 +126,12 @@ bool isRelOp(string token) {
 }
 
 void Compiler::expresses(){
-   cout << "[expresses]   " << token << endl;
+   //cout << "[expresses]   " << token << endl;
    if (isRelOp(token)
       ){
       pushOperator(token);
       nextToken();
-      cout << "           " << token << endl;
+      //cout << "           " << token << endl;
       term();
       const auto my_operator = popOperator();
       const auto operand1 = popOperand();
@@ -139,7 +139,7 @@ void Compiler::expresses(){
       code(my_operator, operand1, operand2);
 
       //nextToken();
-      cout << "           " << token << endl;
+      //cout << "           " << token << endl;
       expresses();
    } else if (token == ")" or token == ";") {
       return;
@@ -157,7 +157,7 @@ bool isAddLevelOp(string token) {
 }
 
 void Compiler::term(){
-   cout << "[term     ]   " << token << endl;
+   //cout << "[term     ]   " << token << endl;
    if(token != "not"
          and token != "true"
          and token != "false"
@@ -174,14 +174,14 @@ void Compiler::term(){
 }
 
 void Compiler::terms(){
-   cout << "[terms    ]   " << token << endl;
+   //cout << "[terms    ]   " << token << endl;
    if(isAddLevelOp(token)){
       pushOperator(token);
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
       factor();
 
-      cout << "    terms";
+      //cout << "    terms";
       const auto my_operator = popOperator();
       const auto operand1 = popOperand();
       const auto operand2 = popOperand();
@@ -204,7 +204,7 @@ void Compiler::terms(){
 } 
 
 void Compiler::factor(){
-   cout << "[factor   ]   " << token << endl;
+   //cout << "[factor   ]   " << token << endl;
    if(token != "not"
          and token != "true"
          and token != "false"
@@ -229,14 +229,14 @@ bool isMultLevelOp(string token) {
 }
 
 void Compiler::factors(){
-   cout << "[factors  ]   " << token << endl;
+   //cout << "[factors  ]   " << token << endl;
    if(isMultLevelOp(token)){
       pushOperator(token);
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
       part();
 
-      cout << "    factors";
+      //cout << "    factors";
       const auto my_operator = popOperator();
       const auto operand1 = popOperand();
       const auto operand2 = popOperand();
@@ -263,30 +263,30 @@ void Compiler::factors(){
 }      
 
 void Compiler::part(){
-   cout << "[part     ]   " << token << endl;
+   //cout << "[part     ]   " << token << endl;
 
    //'not' ( '(' EXPRESS ')' code('not',popOperand)  | 
    //BOOLEANx pushOperand(not x; i.e., 'true' or 'false')  |
    //NON_KEY_IDx code('not',x) )
    if(token == "not"){
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
 
       if(token == "(") {
 
          nextToken();
-         cout << "              " << token << endl;
+         //cout << "              " << token << endl;
          express();
          //    nextToken();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
-         cout << "    part not";
+         //cout << "    part not";
          code("not", popOperand());
       } else if(isBoolean(token)) {
          pushOperand(token == "true" ? "false" : "true" );
       } else if(isNonKeyId(token)) {
-         cout << "    part keyid terms";
+         //cout << "    part keyid terms";
          code("not", token);
       } else {
          processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"+\"");
@@ -296,10 +296,10 @@ void Compiler::part(){
       //( INTEGERx | NON_KEY_IDx ) pushOperand(x) ) 
    } else if(token == "+"){
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
       if(token == "(") {
          nextToken();
-         cout << "              " << token << endl;
+         //cout << "              " << token << endl;
          express();
          if(token != ")") {
             processError("expected \")\" after (...");
@@ -315,21 +315,21 @@ void Compiler::part(){
       //NON_KEY_IDx code('neg',x) )
    } else if(token == "-"){
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
 
       if(token == "(") {
          nextToken();
-         cout << "              " << token << endl;
+         //cout << "              " << token << endl;
          express();
          if(token != ")") {
             processError("expected \")\" after (...");
          }
-         cout << "    part neg";
+         //cout << "    part neg";
          code("neg", popOperand());
       } else if (isInteger(token)) {
          pushOperand("- " + token);
       } else if (isNonKeyId(token)) {
-         cout << "    part neg keyid";
+         //cout << "    part neg keyid";
          code("neg", token);
       } else {
          processError("[part] INTEGER, \"(\", or NON_KEY_ID after \"-\"");
@@ -338,7 +338,7 @@ void Compiler::part(){
       //'(' EXPRESS ')'
    } else if (token == "(") {
       nextToken();
-      cout << "              " << token << endl;
+      //cout << "              " << token << endl;
       express();
       if(token != ")") {
          processError("expected \")\" after (...");
@@ -355,5 +355,5 @@ void Compiler::part(){
 
    //get the next token
    nextToken();
-   cout << "              " << token << endl;
+   //cout << "              " << token << endl;
 }

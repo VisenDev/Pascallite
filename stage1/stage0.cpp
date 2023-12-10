@@ -10,7 +10,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
    //create symbol table entry for each identifier in list of external names
    //Multiply inserted names are illegal
 {
-   cout << "inserting " << externalName << endl;
+   //cout << "inserting " << externalName << endl;
    string name;
    while (externalName != "")
    {
@@ -119,7 +119,7 @@ string Compiler::whichValue(string name) //tells which value a name has
 }
 
 void Compiler::code(string op, string operand1, string operand2) {
-   cout << "    code(" + op + ", " + operand1 + ", " + operand2 + ")" << endl;
+   //cout << "    code(" + op + ", " + operand1 + ", " + operand2 + ")" << endl;
    
    if (op == "program") {
       emitPrologue(operand1);
