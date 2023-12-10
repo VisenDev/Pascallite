@@ -291,19 +291,17 @@ void Compiler::emitNotCode(string operand1, string)                // !op1
    } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1)) {
       contentsOfAReg = "";
    }  if((contentsOfAReg != operand1)) {
-      	emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = "+operand2);
+      	emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = "+operand1);
 	   contentsOfAReg = operand1;
    }
 	if (contentsOfAReg == operand1)
 	{
-		emit("", "not", "eax", '; AReg = !AReg");
+		emit("", "not", "eax", "; AReg = !AReg");
 	}
 	else
 		processError("compiler error: emit not logic");
 	
 	if (isTemporary(operand1))
-		freeTemp();
-	if (isTemporary(operand2))
 		freeTemp();
 	contentsOfAReg = getTemp();
 	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
