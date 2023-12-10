@@ -69,8 +69,16 @@ void Compiler::emitWriteCode(string operand, string)
 
 void Compiler::emitAssignCode(string operand1, string operand2)         // op2 = op1
 {
+   
+	if (symbolTable.find(operand1) == symbolTable.end() or  symbolTable.find(operand2) == symbolTable.end()) {
+      processError("Internal compiler error: emitAssignCode called with invalid arguments");
+   } else
 	if (symbolTable.find(operand1)->second.getDataType() != symbolTable.find(operand2)->second.getDataType())
-		processError("operand types must match");
+		processError("operand types must match, " + operand1 + " is of type " 
+            + (DATATYPE(operand1) == INTEGER ? "INTEGER" : DATATYPE(operand1) == BOOLEAN ? "BOOLEAN" : "UNKNOWN")
+            + " " + operand2 + " is of type "
+            + (DATATYPE(operand2) == INTEGER ? "INTEGER" : DATATYPE(operand2) == BOOLEAN ? "BOOLEAN" : "UNKNOWN")
+      );
 	if (symbolTable.find(operand2)->second.getMode()!= VARIABLE)
 		processError("symbol on left-hand side of assignment must have a storage mode of VARIABLE");
 	if (operand1 == operand2)
@@ -343,6 +351,35 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
       	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
+   
+   //compare register to memory
+   emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; AReg = "+operand2);
+   const auto label_equal = getLabel(); 
+   emit("", "je", label_equal, "; je to " + label_equal);
+   
+   emit("", "mov", "eax, [FALSE]", "; Areg = FALSE");
+   if(!EXISTS("FALSE")) {
+      cout << "inserting false inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_equal, "; jmp to " + label_false);
+   emit(label_equal, "", "", "; " + label_equal);
+   
+   emit("", "mov", "eax, [TRUE]", "; Areg = TRUE");
+   if(!EXISTS("TRUE")){
+      cout << "inserting true inside equality code" << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+            //symbolTable.insert(pair<string, SymbolTableEntry>(name, SymbolTableEntry(name,inType,inMode,inValue,inAlloc,inUnits)));
+   
+   emit(label_false, "", "", "; " + label_false);
+   
+//  emit code to label the next instruction with the second acquired label L(n+1)
+//  deassign all temporaries involved and free those names for reuse
+//  A Register = next available temporary name and change type of its symbol table entry to boolean
 	
 	//insert function logic here
 	
@@ -397,6 +434,28 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
    }
 	
 	//insert function logic here
+   emit("", "cmp", "eax, ["+NAME(operand2)+"]", "; AReg = "+operand2);
+   const auto label_equal = getLabel(); 
+   emit("", "jne", label_equal, "; je to " + label_equal);
+   
+   emit("", "mov", "eax, [FALSE]", "; Areg = FALSE");
+   if(!EXISTS("false")) {
+      cout << "inserting false into symbol table " << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("false", SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+   }
+   
+   const auto label_false = getLabel();
+   emit("", "jmp", label_equal, "; jmp to " + label_false);
+   emit(label_equal, "", "", "; " + label_equal);
+   
+   emit("", "mov", "eax, [TRUE]", "; Areg = TRUE");
+   if(!EXISTS("true")){
+      cout << "inserting true into symbol table " << endl;
+      symbolTable.insert(pair<string, SymbolTableEntry>("true", SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+   }
+   
+   emit(label_false, "", "", "; " + label_false);
+ 
 	
 	if (isTemporary(operand1))
 		freeTemp();

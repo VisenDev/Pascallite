@@ -14,8 +14,8 @@ string Compiler::popOperator() {
 }
 
 void Compiler::pushOperand(string op) {
-	if (isLiteral(op) and (symbolTable.find(op) == symbolTable.end()))
-	{
+	if (isInteger(op) and (symbolTable.find(op) == symbolTable.end())) {
+      cout << "inserting " << op << " in pushOperand" << endl;
 		insert(op, whichType(op), CONSTANT, op, YES, 1);
 	}
    operandStk.push(op);

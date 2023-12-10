@@ -10,6 +10,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
    //create symbol table entry for each identifier in list of external names
    //Multiply inserted names are illegal
 {
+   cout << "inserting " << externalName << endl;
    string name;
    while (externalName != "")
    {
@@ -30,7 +31,7 @@ void Compiler::insert(string externalName, storeTypes inType, modes inMode, stri
       if (symbolTable.find(name) != symbolTable.end())
          processError("multiple name definition");
       else if (isKeyword(name))
-         processError("illegal use of keyword");
+         processError("illegal use of keyword \"" + name + "\"");
       else if (symbolTable.size() > 255)
          processError("Symbol Table overflow");
       else //create table entry
