@@ -18,6 +18,14 @@ void Compiler::pushOperand(string op) {
       cout << "inserting " << op << " in pushOperand" << endl;
 		insert(op, whichType(op), CONSTANT, op, YES, 1);
 	}
+	if (isBoolean(op) and (symbolTable.find(op) == symbolTable.end()))
+	{
+		if (op == "true")
+      		symbolTable.insert(pair<string, SymbolTableEntry>(op, SymbolTableEntry("TRUE", BOOLEAN, CONSTANT, "-1", YES, 1)));
+		else if (op == "false")
+	      	symbolTable.insert(pair<string, SymbolTableEntry>(op, SymbolTableEntry("FALSE", BOOLEAN, CONSTANT, "0", YES, 1)));
+
+	}
    operandStk.push(op);
 }
 

@@ -22,7 +22,7 @@ string Compiler::getTemp(){
 string Compiler::getLabel(){
    static int i = -1;
    i++;
-   return "L"+to_string(i);
+   return ".L"+to_string(i);
 }
 
 bool Compiler::isTemporary(string s) const {
