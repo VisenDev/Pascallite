@@ -277,7 +277,38 @@ void Compiler::emitNegationCode(string operand1, string)           // -op1
 	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
 	pushOperand(contentsOfAReg);
 }
-void Compiler::emitNotCode(string operand1, string){}                // !op1
+void Compiler::emitNotCode(string operand1, string)                // !op1
+{
+	if (!EXISTS(operand1))
+		processError("undefined operand");
+	if ((DATATYPE(operand1) != BOOLEAN))
+      processError("illegal type, expected boolean");
+   
+   if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1)) {
+      emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
+	   symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
+	   contentsOfAReg = ""; //May need to change, no clue what it means to deassign the AReg
+   } else if (!isTemporary(contentsOfAReg) and (contentsOfAReg != operand1)) {
+      contentsOfAReg = "";
+   }  if((contentsOfAReg != operand1)) {
+      	emit("", "mov", "eax, ["+symbolTable.find(operand1)->second.getInternalName()+"]", "; AReg = "+operand2);
+	   contentsOfAReg = operand1;
+   }
+	if (contentsOfAReg == operand1)
+	{
+		emit("", "not", "eax", '; AReg = !AReg");
+	}
+	else
+		processError("compiler error: emit not logic");
+	
+	if (isTemporary(operand1))
+		freeTemp();
+	if (isTemporary(operand2))
+		freeTemp();
+	contentsOfAReg = getTemp();
+	symbolTable.find(contentsOfAReg)->second.setDataType(INTEGER);
+	pushOperand(contentsOfAReg);
+}
 void Compiler::emitAndCode(string operand1, string operand2)            // op2 && op1
 {
 	if (!EXISTS(operand1) or !EXISTS(operand2))
@@ -295,8 +326,10 @@ void Compiler::emitAndCode(string operand1, string operand2)            // op2 &
       	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
-	
-	//insert function logic here
+	if(contentsOfAReg == operand2)
+		emit("", "and", "eax,["+NAME(operand1)+"]", "; AReg = "+operand2+" and "+operand1);
+	else if(contentsOfAReg == operand1)
+		emit("", "and", "eax,["+NAME(operand2)+"]", "; AReg = "+operand1+" and "+operand2);
 	
 	if (isTemporary(operand1))
 		freeTemp();
@@ -323,8 +356,10 @@ void Compiler::emitOrCode(string operand1, string operand2)            // op2 ||
       	emit("", "mov", "eax, ["+symbolTable.find(operand2)->second.getInternalName()+"]", "; AReg = "+operand2);
 	   contentsOfAReg = operand2;
    }
-	
-	//insert function logic here
+	if(contentsOfAReg == operand2)
+		emit("", "or", "eax,["+NAME(operand1)+"]", "; AReg = "+operand2+" or "+operand1);
+	else if(contentsOfAReg == operand1)
+		emit("", "or", "eax,["+NAME(operand2)+"]", "; AReg = "+operand1+" or "+operand2);
 	
 	if (isTemporary(operand1))
 		freeTemp();
