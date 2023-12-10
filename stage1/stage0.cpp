@@ -411,6 +411,10 @@ string Compiler::ids() //token should be NON_KEY_ID
       processError("non-keyword identifier expected");
    }
 
+	if(token.length() > 15){
+         token = token.substr(0, 15);
+      }
+	
    tempString = token;
    temp = token;
 

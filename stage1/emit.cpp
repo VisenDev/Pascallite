@@ -26,6 +26,10 @@ void Compiler::emitReadCode(string operand, string)
       if ((operand != "") && (operand.front() == ','))
          operand.erase(0,1);
 
+	  if(name.length() > 15){
+         name = name.substr(0, 15);
+      }
+	   
       auto itr = symbolTable.find(name);
       if (itr == symbolTable.end())
          processError("Symbol "+name+" is undefined");
@@ -53,6 +57,10 @@ void Compiler::emitWriteCode(string operand, string)
       }
       if ((operand != "") && (operand.front() == ','))
          operand.erase(0,1);
+	   
+	  if(name.length() > 15){
+         name = name.substr(0, 15);
+      }
 
       auto itr = symbolTable.find(name);
       if (itr == symbolTable.end())
