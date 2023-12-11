@@ -1,4 +1,11 @@
+//Coded by: Robert Burnett and Matthew Barton
+//Stage1 Compiler for Pascallite
 #include "stage1.h"
+#include <iomanip>
+#include <ctime>
+#include <algorithm>
+#include <cctype>
+#include <cstdlib>
 
 void Compiler::pushOperator(string op) {
    operatorStk.push(op);
@@ -895,7 +902,7 @@ void Compiler::express(){
          and !isInteger(token)
          and !isNonKeyId(token)
      ){
-      processError("[express] expected true, false, (, +, -, INTEGER, or NON_KEY_ID");
+      processError("[express] expected true, false, (, +, -, \',\', not, INTEGER, or NON_KEY_ID");
    }
    term();
    expresses();
@@ -1143,14 +1150,6 @@ void Compiler::part(){
    nextToken();
    //cout << "              " << token << endl;
 }
-
-
-//Coded by: Robert Burnett and Matthew Barton
-//Stage0 Compiler for Pascallite
-#include "stage1.h"
-#include <iomanip>
-#include <ctime>
-#include <algorithm>
 
 void Compiler::insert(string externalName, storeTypes inType, modes inMode, string inValue,
       allocation inAlloc, int inUnits)
@@ -1588,7 +1587,6 @@ string Compiler::ids() //token should be NON_KEY_ID
 
 
 //==========Helpers===========
-#include <cctype>
 
 // Helper functions for the Pascallite lexicon
 
@@ -1649,7 +1647,6 @@ bool Compiler::isLiteral(string s) const {
 
 
 //=============constructors, etc===========
-#include <cstdlib>
 
 Compiler::Compiler(char **argv) // constructor
 {
@@ -1803,7 +1800,7 @@ char Compiler::nextChar() //returns the next character or end of file marker
    return ch;
 }
 
-#include <string>
+
 
 void Compiler::freeTemp(){
    currentTempNo -= 1;
