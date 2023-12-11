@@ -446,7 +446,7 @@ string Compiler::ids() //token should be NON_KEY_ID
 // Helper functions for the Pascallite lexicon
 
 bool Compiler::isKeyword(string s) const {
-   auto keywords = {"begin", "end", "var", "const", "program", "true", "false", "not", "integer", "boolean", "and"};
+   auto keywords = {"begin", "end", "var", "const", "program", "true", "false", "not", "integer", "boolean", "and", "or", "mod", "div"};
    return std::find(keywords.begin(), keywords.end(), s) != keywords.end();
 }
 

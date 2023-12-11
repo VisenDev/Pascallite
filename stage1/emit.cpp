@@ -83,7 +83,7 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
       processError("Internal compiler error: emitAssignCode called with invalid arguments");
    } else
       if (symbolTable.find(operand1)->second.getDataType() != symbolTable.find(operand2)->second.getDataType())
-         processError("operand types must match, " + operand1 + " is of type " 
+         processError("assignment operand types must match, " + operand1 + " is of type " 
                + (DATATYPE(operand1) == INTEGER ? "INTEGER" : DATATYPE(operand1) == BOOLEAN ? "BOOLEAN" : "UNKNOWN")
                + " " + operand2 + " is of type "
                + (DATATYPE(operand2) == INTEGER ? "INTEGER" : DATATYPE(operand2) == BOOLEAN ? "BOOLEAN" : "UNKNOWN")
@@ -102,7 +102,7 @@ void Compiler::emitAssignCode(string operand1, string operand2)         // op2 =
 
 void Compiler::emitAdditionCode(string operand1, string operand2){
    if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
-      processError("undefined operands");
+      processError("undefined operands in addition operation");
    if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
       processError("binary \'+\' requires integer operands");
    }
@@ -134,9 +134,9 @@ void Compiler::emitAdditionCode(string operand1, string operand2){
 
 void Compiler::emitSubtractionCode(string operand1, string operand2){
    if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
-      processError("undefined operands");
+      processError("undefined operands in subtraction operation");
    if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
-      processError("illegal type, expected integer");
+      processError("binary \'-\' requires integer operands");
    }
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -163,9 +163,9 @@ void Compiler::emitSubtractionCode(string operand1, string operand2){
 void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *  op1
 {
    if ((symbolTable.find(operand1) == symbolTable.end()) or (symbolTable.find(operand2) == symbolTable.end()))
-      processError("undefined operands");
+      processError("undefined operands in multiplication operation");
    if((symbolTable.find(operand1)->second.getDataType() != INTEGER) or (symbolTable.find(operand2)->second.getDataType() != INTEGER)) {
-      processError("illegal type, expected integer");
+      processError("binary \'*\' requires integer operands");
    }
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -195,9 +195,9 @@ void Compiler::emitMultiplicationCode(string operand1, string operand2) // op2 *
 void Compiler::emitDivisionCode(string operand1, string operand2)      // op2 /  op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined arguments");
+      processError("undefined arguments in division operation");
    if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
-      processError("illegal types, needs integer arguments");
+      processError("binary \'div\' requires integer operands");
    if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
    {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -230,9 +230,9 @@ void Compiler::emitDivisionCode(string operand1, string operand2)      // op2 / 
 void Compiler::emitModuloCode(string operand1, string operand2)         // op2 %  op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined arguments");
+      processError("undefined arguments in modulus operation");
    if ((DATATYPE(operand1) != INTEGER) or (DATATYPE(operand2) != INTEGER))
-      processError("illegal types, needs integer arguments");
+      processError("binary \'mod\' requires integer operands");
    if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand2))
    {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -266,9 +266,9 @@ void Compiler::emitModuloCode(string operand1, string operand2)         // op2 %
 void Compiler::emitNegationCode(string operand1, string)           // -op1
 {
    if (!EXISTS(operand1))
-      processError("undefined arguments");
+      processError("undefined argument in negation operation");
    if (symbolTable.find(operand1)->second.getDataType() != INTEGER)
-      processError("illegal argument");
+      processError("unary \'-\' requires integer operand");
    if (isTemporary(contentsOfAReg) and (contentsOfAReg != operand1))
    {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -289,9 +289,9 @@ void Compiler::emitNegationCode(string operand1, string)           // -op1
 void Compiler::emitNotCode(string operand1, string)                // !op1
 {
    if (!EXISTS(operand1))
-      processError("undefined operand");
+      processError("undefined operand in not operation");
    if ((DATATYPE(operand1) != BOOLEAN))
-      processError("illegal type, expected boolean");
+      processError("unary \'not\' requires boolean operand");
 
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -319,7 +319,7 @@ void Compiler::emitNotCode(string operand1, string)                // !op1
 void Compiler::emitAndCode(string operand1, string operand2)            // op2 && op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in and operation");
    if ((DATATYPE(operand1) != BOOLEAN) or (DATATYPE(operand2) != BOOLEAN))
       processError("binary \'and\' requires boolean operands");
 
@@ -349,9 +349,9 @@ void Compiler::emitAndCode(string operand1, string operand2)            // op2 &
 void Compiler::emitOrCode(string operand1, string operand2)            // op2 || op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in or operation");
    if ((DATATYPE(operand1) != BOOLEAN) or (DATATYPE(operand2) != BOOLEAN))
-      processError("illegal type, expected boolean");
+      processError("binary \'or\' requires boolean operands");
 
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
@@ -380,9 +380,9 @@ void Compiler::emitOrCode(string operand1, string operand2)            // op2 ||
 void Compiler::emitEqualityCode(string operand1, string operand2)
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in equality operation");
    if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN))))
-      processError("illegal type, expected both boolean or both integer");
+      processError("illegal operands, equality expected both boolean or both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
@@ -465,9 +465,9 @@ void Compiler::emitEqualityCode(string operand1, string operand2)
 void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 != op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in inequality operation");
    if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER)) or ((DATATYPE(operand1) == BOOLEAN) and (DATATYPE(operand2) == BOOLEAN))))
-      processError("illegal type, expected both boolean or both integer");
+      processError("illegal type, inequality expected both boolean or both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand1) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
@@ -516,9 +516,9 @@ void Compiler::emitInequalityCode(string operand1, string operand2)    // op2 !=
 void Compiler::emitLessThanCode(string operand1, string operand2)       // op2 <  op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in less than operation");
    if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
-      processError("illegal type, expected both integer");
+      processError("illegal type, less than expected both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
@@ -574,9 +574,9 @@ void Compiler::emitLessThanCode(string operand1, string operand2)       // op2 <
 void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2) // op2 <= op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in less than or equal to operation");
    if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
-      processError("illegal type, expected both integer");
+      processError("illegal type, less than or equal to expected both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
@@ -632,9 +632,9 @@ void Compiler::emitLessThanOrEqualToCode(string operand1, string operand2) // op
 void Compiler::emitGreaterThanCode(string operand1, string operand2)    // op2 >  op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in greater than operation");
    if (!( ((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
-      processError("illegal type, expected both integer");
+      processError("illegal type, greater than expected both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
@@ -690,9 +690,9 @@ void Compiler::emitGreaterThanCode(string operand1, string operand2)    // op2 >
 void Compiler::emitGreaterThanOrEqualToCode(string operand1, string operand2) // op2 >= op1
 {
    if (!EXISTS(operand1) or !EXISTS(operand2))
-      processError("undefined operands");
+      processError("undefined operands in greater than or equal to operation");
    if (!(((DATATYPE(operand1) == INTEGER) and (DATATYPE(operand2) == INTEGER))))
-      processError("illegal type, expected both integer");
+      processError("illegal type, greater than or equal to expected both integer");
    if(isTemporary(contentsOfAReg) and (contentsOfAReg != operand2)) {
       emit("", "mov", "["+contentsOfAReg+"],eax", "; deassign AReg");
       symbolTable.find(contentsOfAReg)->second.setAlloc(YES);
