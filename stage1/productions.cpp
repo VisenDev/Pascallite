@@ -286,10 +286,10 @@ void Compiler::part(){
       } else if(isBoolean(token)) {
          pushOperand(token == "true" ? "false" : "true" );
       } else if(isNonKeyId(token)) {
-         //cout << "    part keyid terms";
+         //cout << "and";
          code("not", token);
       } else {
-         processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"+\"");
+         processError("[part] expected (, BOOLEAN, or NON_KEY_ID after \"not\"");
       }
 
       //'+' ( '(' EXPRESS ')' |
