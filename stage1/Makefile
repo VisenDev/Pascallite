@@ -1,7 +1,7 @@
 CFLAGS= -Wall -Wextra -Wpedantic -std=c++11
 CFILES= stage1main.C
 BIN= stage1
-DAT= 161
+DAT= 154
 
 all: ${CFILES}
 	g++  ${CFILES} ${CFLAGS} -o ${BIN}

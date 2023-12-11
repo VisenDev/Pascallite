@@ -1,11 +1,7 @@
 #include "stage1.h"
 
 //include files to avoid linking
-#include "actions.cpp"
-#include "emit.cpp"
-#include "productions.cpp"
-#include "stage0.cpp"
-#include "temp.cpp"
+#include "stage1.cpp"
 
 int main(int argc, char **argv)
 {
