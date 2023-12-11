@@ -11,6 +11,9 @@ void Compiler::freeTemp(){
 string Compiler::getTemp(){
    string temp;
    currentTempNo += 1;
+   if(currentTempNo > 100) {
+      processError("Tempory variable overflow - Maximum number of temps is 101");
+   }
    temp = "T" + to_string(currentTempNo);
    if(currentTempNo > maxTempNo) {
       insert(temp, UNKNOWN, VARIABLE, "", NO, 1);
